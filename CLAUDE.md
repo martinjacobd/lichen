@@ -21,7 +21,12 @@ exactly one token, or if two labels share one.
 - `vllm-backend` — **broken, kept only as history.** Its call-time `import llama_cpp` binds
   locally, so four `Evaluator` methods read an undefined global and every `--batch` request 500s
   with `NameError`. `--batch` is the Docker default. Superseded by `backend-split`.
-- `backend-split` — current work. Three commits over upstream, pushed to `fork`.
+- `backend-split` — three commits over upstream, pushed to `fork`.
+- `thinking` — branched off `backend-split` 2026-09-26. `--thinking N` lets the model reason
+  before the label is read. **Prompt construction verified against a stub; NOT yet run against a
+  real thinking model** (both GPUs were unavailable), and `shrink`/`confidence` still carry
+  constants fit on no-thinking distributions. See the commit message for the design; the two
+  things to do first are in the "Still to do" section below.
 
 `origin` = upstream (read-only in practice), `fork` = github.com/martinjacobd/lichen.
 
@@ -121,3 +126,25 @@ recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
   jevbench's `typesafe` adapter works against it unchanged. `--key-env ""` for a local endpoint.
 - Upstream's apt 404 was a transient Ubuntu mirror inconsistency, since resolved. His
   `Acquire::Retries=5` cannot fix a 404; his README's archive-only stanza is the part that works.
+
+## `--thinking`: still to do before trusting it
+
+Built on the `thinking` branch, unvalidated live. In order:
+
+1. **Run it against a real thinking model.** Ornith 1.5-35B on the 5080 (`gpum up
+   local-ornith-mtp`) or the Qwen3.8-27B on leviathan via `--vllm-endpoint`. Check first that
+   the trace is non-empty and that the label read still lands on a label rather than `<think>`
+   — the failure mode is silent, since a distribution comes back either way.
+2. **Remeasure `shrink` and `confidence`.** Their constants were fit on one-forward-pass
+   distributions. Thinking usually sharpens the peak, so the existing shrink will
+   under-correct and confidence will read high. Compare the label-probability distributions
+   with and without `--thinking` on JevBench's hard tier before quoting any accuracy number.
+3. **Then the accuracy question**, which is the interesting one: does reasoning-before-label
+   beat one forward pass on the hard tier, and by enough to justify a decoding loop per item?
+   Use the paired exact McNemar in `gpum eval compare`'s style — the items are identical, so
+   comparing proportions would waste most of the power.
+
+A deliberate non-goal: sampling k traces and averaging the label vectors (a principled
+marginalisation over reasoning, and strictly better than majority voting since it uses the
+whole distribution). `combine()` is already the right machinery. It belongs behind its own
+flag once single-trace thinking is shown to work at all.
