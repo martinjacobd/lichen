@@ -127,53 +127,65 @@ recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
 - Upstream's apt 404 was a transient Ubuntu mirror inconsistency, since resolved. His
   `Acquire::Retries=5` cannot fix a 404; his README's archive-only stanza is the part that works.
 
-## `--thinking`: validated live 2026-09-26, and what it showed
+## `--thinking`: validated live 2026-09-26 — correct now, and not worth turning on
 
-Run against Qwen3.8-27B-FP8 on leviathan (vLLM 0.29.0) over all 50 JevBench hard cases:
-`bench/validate_thinking.py`, data in `results/thinking-paired-qwen38-27b-hard.json`. Step 1 is
-**done**; it found two silent bugs (both fixed in `f53cdac` — see that commit message for the
-mechanisms) and one design flaw that is still open.
+Run against Qwen3.8-27B-FP8 on leviathan (vLLM 0.29.0) over the 50 JevBench hard cases.
+Harness `bench/validate_thinking.py`, cue sweep `bench/thinking_cue_sweep.py`, data in
+`results/thinking-*.json`. Three silent bugs found and fixed (`f53cdac`, `d7fc692`); the
+accuracy question is answered.
 
-**The open problem: the read loses its label alphabet after a letterless trace.** `captured` is
-the label probability mass BEFORE renormalising — what the read actually sees:
+**Final state of the read** (48 of 50 — `cat_dock` and `cat_mesh` have 19 labels each and lose
+some to the server's top-64; see the open item below):
 
-| type | n | landing (thinking) | captured plain | captured think |
-|---|---|---|---|---|
-| choice | 18 | 16 off-label, 2 label | 0.995 | **0.140** |
-| noul | 23 | 3 off-label, 5 wrong case, 15 label | 0.996 | **0.597** |
-| score | 7 | 7 label | 0.998 | 1.000 |
+| | plain | thinking |
+|---|---|---|
+| argmax on a label | 48/48 | 48/48 |
+| captured mass (mean / min) | 0.996 / 0.985 | 0.967 / 0.760 |
+| confidence (mean) | 0.874 | 0.870 |
+| accuracy vs gold | 45/48 (93.8%) | 45/48 (93.8%) |
 
-Plain is 48/48 on a label, captured min 0.985. Thinking averages 0.485 and bottoms out at 0.0000,
-while `confidence` **rises** 0.874 → 0.916, because renormalising over the labels hides the
-collapse entirely. (Two more cases raised "labels missing from top-64" — the guard working.)
+Discordant pairs 2 and 2; **exact McNemar p = 1.0000**. So reasoning-before-label buys nothing
+here for ~30x the latency (~5–8s a case against ~0.2s). Four discordant pairs is very little
+power, so that is *no evidence of benefit*, not evidence of no benefit — and at 93.8% there are
+only three errors left to fix, so a ceiling effect is the obvious confound. A harder tier or a
+weaker model is where this would be worth re-asking.
 
-`unlettered_options` is the cause, and `score` is the proof: the one type whose reasoning prompt
-keeps its labels — the levels are ordinal, so their numbers stay — is the one type that reads
-perfectly. Strip them and the model, having reasoned about option CONTENT, continues with content
-or prose (argmax `'deploy'`, `'fitness'`, `'storage'`, `'The'`) instead of the letter. Letterless
-traces are load-bearing for rotation-invariance — one trace per case rather than one per variant —
-so this is a genuine tension, not an oversight.
+**`captured` is the metric to judge any change by** — the label probability BEFORE renormalising,
+i.e. what the read actually sees. Every one of the three bugs returned a confident-looking
+renormalised distribution while measuring nothing; in the worst case `confidence` *rose* to 0.916
+as the read degraded. `bench/validate_thinking.py` reports it per case and per type and classifies
+each read `label` / `label-case` / `other`. Do not judge a thinking change by accuracy or
+confidence alone.
 
-**Do not quote a --thinking accuracy number until the read has a bridge back to the labels.** The
-43/48 agreement with the plain read is not evidence of health when the read is renormalising
-noise. In order, now:
+### Still open
 
-1. **Give the post-trace prompt a label cue, and measure `captured` for each candidate.** The
-   splice may legitimately end with a cue, since the invariant is only that the prompt ends where
-   the label goes: `</think>\n\nAnswer: ` is the obvious one, restating the lettered mapping
-   after the block is the other. `captured` is the objective function — anything below ~0.9 is
-   still reading noise. `bench/validate_thinking.py` already reports it per case and per type.
-2. **Then remeasure `shrink` and `confidence`,** which is only meaningful once the read is sound.
-   Note the extra wrinkle the run turned up: 5 noul cases landed on the wrong CASE of the label
-   (`'yes'` for `'Yes'`), because the model echoes its own trace's casing — so mass leaks even
-   when the argmax is label-shaped.
-3. **Then the accuracy question,** with the paired exact McNemar in `gpum eval compare`'s style.
+1. **The top-64 truncation, which is a read-mechanism limit rather than a prompt one.** A choice
+   with 19 labels plus a peaked post-thinking distribution puts rare labels outside the server's
+   top-64 of the whole vocabulary, and `_probs` then refuses (correctly — a missing label would
+   otherwise read as zero). Raising the server's `--max-logprobs` (gpum's `MAX_LOGPROBS`, now 64)
+   helps; the real fix is to stop depending on top-k at all and restrict the distribution to the
+   label tokens, e.g. vLLM's `allowed_token_ids` or a `logit_bias` on the labels. That would also
+   make `captured` unnecessary rather than merely satisfied.
+2. **The llamacpp half of the bridge has never been run.** `splice_trace` there takes `labels` and
+   appends the same `label_constraint`, and it is by construction the same edit, but no GGUF has
+   exercised it. It needs the harness venv, which does not currently exist, and a thinking GGUF
+   that llama-cpp-python's bundled llama.cpp actually supports — `Mellum2-12B-A2.5B-Thinking-Q8_0`
+   and the Ornith MTP file are both on `/mnt/local/models/`, but both are new architectures (the
+   Mellum2 preset needs build 11176), so arch support is the thing to check first, before
+   attributing any failure to the splice:
 
-`bench/validate_thinking.py` is the harness for all three: it classifies each read as
-`label` / `label-case` / `other` and reports captured mass, rather than trusting the label
-softmax — which is what made both original bugs invisible.
+       uv venv ~/src/lichen-harness/venv-real
+       uv pip install --python ~/src/lichen-harness/venv-real llama-cpp-python==0.3.35 numpy jinja2
+
+   Check the same two things the vLLM run had to: that the trace is non-empty and is not just the
+   model's one-word answer, and that the argmax at the label position is a label.
+3. **`shrink` and `confidence` still have constants fit on no-thinking distributions.** Less
+   urgent than it looked: with the bridge in place thinking's confidence (0.870) sits essentially
+   on top of plain's (0.874), so there is no large peak-sharpening to correct for. Worth
+   remeasuring only if thinking is ever adopted.
 
 A deliberate non-goal: sampling k traces and averaging the label vectors (a principled
-marginalisation over reasoning, and strictly better than majority voting since it uses the
-whole distribution). `combine()` is already the right machinery. It belongs behind its own
-flag once single-trace thinking is shown to work at all.
+marginalisation over reasoning, and strictly better than majority voting since it uses the whole
+distribution). `combine()` is already the right machinery. Given the p = 1.0000 above, it needs a
+tier where single-trace thinking shows a benefit first, or it is just a more expensive way to get
+the same answer.
