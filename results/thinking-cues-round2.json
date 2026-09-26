@@ -1,0 +1,3319 @@
+[
+ {
+  "id": "pol_eu_override",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 216,
+  "captured_plain": 0.9983,
+  "pick_plain": "yes",
+  "conf_plain": 0.671,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.4133,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.9158
+   },
+   "F_map_remind": {
+    "captured": 0.3528,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.9414
+   },
+   "G_answer_nl": {
+    "captured": 0.4333,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.3584
+   },
+   "H_all": {
+    "captured": 0.4447,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.5098
+   },
+   "J_alphabet": {
+    "captured": 0.7599,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8298
+   }
+  },
+  "seconds": 5.8
+ },
+ {
+  "id": "pol_opened_sw",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 215,
+  "captured_plain": 0.9994,
+  "pick_plain": "no",
+  "conf_plain": 0.9253,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.8508,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9979
+   },
+   "F_map_remind": {
+    "captured": 0.9038,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   },
+   "G_answer_nl": {
+    "captured": 0.8169,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9896
+   },
+   "H_all": {
+    "captured": 0.8284,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9889
+   },
+   "J_alphabet": {
+    "captured": 0.9925,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.999
+   }
+  },
+  "seconds": 5.7
+ },
+ {
+  "id": "pol_defective_sw",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 212,
+  "captured_plain": 0.9994,
+  "pick_plain": "yes",
+  "conf_plain": 0.8649,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.8346,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9593
+   },
+   "F_map_remind": {
+    "captured": 0.8654,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9682
+   },
+   "G_answer_nl": {
+    "captured": 0.5592,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7039
+   },
+   "H_all": {
+    "captured": 0.6757,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7039
+   },
+   "J_alphabet": {
+    "captured": 0.9868,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.954
+   }
+  },
+  "seconds": 5.8
+ },
+ {
+  "id": "pol_final_sale",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 206,
+  "captured_plain": 0.9993,
+  "pick_plain": "no",
+  "conf_plain": 0.9896,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.816,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.999
+   },
+   "F_map_remind": {
+    "captured": 0.866,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9995
+   },
+   "G_answer_nl": {
+    "captured": 0.7971,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9889
+   },
+   "H_all": {
+    "captured": 0.8033,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9919
+   },
+   "J_alphabet": {
+    "captured": 0.9726,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9996
+   }
+  },
+  "seconds": 5.3
+ },
+ {
+  "id": "pol_late",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 304,
+  "captured_plain": 0.9983,
+  "pick_plain": "yes",
+  "conf_plain": 0.4116,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7956,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9902
+   },
+   "F_map_remind": {
+    "captured": 0.8797,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.997
+   },
+   "G_answer_nl": {
+    "captured": 0.7603,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9858
+   },
+   "H_all": {
+    "captured": 0.8086,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9736
+   },
+   "J_alphabet": {
+    "captured": 0.9429,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9944
+   }
+  },
+  "seconds": 7.2
+ },
+ {
+  "id": "pol_expense",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "keys": [
+   "approve",
+   "approve_partial",
+   "reject",
+   "ask_for_info"
+  ],
+  "trace_words": 751,
+  "captured_plain": 0.9978,
+  "pick_plain": "approve_partial",
+  "conf_plain": 0.948,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9035,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "ask_for_info",
+    "conf": 0.9959
+   },
+   "F_map_remind": {
+    "captured": 0.9293,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "ask_for_info",
+    "conf": 0.9875
+   },
+   "G_answer_nl": {
+    "captured": 0.7154,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "ask_for_info",
+    "conf": 0.4903
+   },
+   "H_all": {
+    "captured": 0.9488,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "ask_for_info",
+    "conf": 0.9072
+   },
+   "J_alphabet": {
+    "captured": 0.9654,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "ask_for_info",
+    "conf": 0.8366
+   }
+  },
+  "seconds": 16.9
+ },
+ {
+  "id": "cat_fitband",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 130,
+  "captured_plain": 0.9983,
+  "pick_plain": "fitness_trackers",
+  "conf_plain": 0.9955,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0,
+    "argmax": "L",
+    "missing": [
+     "O"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "F_map_remind": {
+    "captured": 0.7727,
+    "argmax": "L",
+    "missing": [],
+    "landing": "label",
+    "pick": "fitness_trackers",
+    "conf": 0.9911
+   },
+   "G_answer_nl": {
+    "captured": 0.6474,
+    "argmax": "L",
+    "missing": [],
+    "landing": "label",
+    "pick": "fitness_trackers",
+    "conf": 0.809
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "L",
+    "missing": [
+     "N",
+     "O",
+     "P",
+     "Q"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.976,
+    "argmax": "L",
+    "missing": [],
+    "landing": "label",
+    "pick": "fitness_trackers",
+    "conf": 0.9677
+   }
+  },
+  "seconds": 4.6
+ },
+ {
+  "id": "cat_dock",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 142,
+  "captured_plain": 0.9988,
+  "pick_plain": "laptop_accessories",
+  "conf_plain": 0.9996,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0,
+    "argmax": "B",
+    "missing": [
+     "N",
+     "P"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "F_map_remind": {
+    "captured": 0.0,
+    "argmax": "l",
+    "missing": [
+     "N",
+     "P"
+    ],
+    "landing": "label-case",
+    "pick": null,
+    "conf": null
+   },
+   "G_answer_nl": {
+    "captured": 0.787,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "laptop_accessories",
+    "conf": 0.9573
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "B",
+    "missing": [
+     "G",
+     "H",
+     "J",
+     "K",
+     "M",
+     "N",
+     "O",
+     "P"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.0,
+    "argmax": "B",
+    "missing": [
+     "N"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   }
+  },
+  "seconds": 4.7
+ },
+ {
+  "id": "cat_kindle",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 142,
+  "captured_plain": 0.9991,
+  "pick_plain": "e_readers",
+  "conf_plain": 0.9992,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9895,
+    "argmax": "N",
+    "missing": [],
+    "landing": "label",
+    "pick": "e_readers",
+    "conf": 0.9959
+   },
+   "F_map_remind": {
+    "captured": 0.9901,
+    "argmax": "N",
+    "missing": [],
+    "landing": "label",
+    "pick": "e_readers",
+    "conf": 0.994
+   },
+   "G_answer_nl": {
+    "captured": 0.9262,
+    "argmax": "N",
+    "missing": [],
+    "landing": "label",
+    "pick": "e_readers",
+    "conf": 0.9599
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "N",
+    "missing": [
+     "P"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.9912,
+    "argmax": "N",
+    "missing": [],
+    "landing": "label",
+    "pick": "e_readers",
+    "conf": 0.9887
+   }
+  },
+  "seconds": 4.8
+ },
+ {
+  "id": "cat_sdcard",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 171,
+  "captured_plain": 0.9985,
+  "pick_plain": "storage",
+  "conf_plain": 0.999,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9588,
+    "argmax": "R",
+    "missing": [],
+    "landing": "label",
+    "pick": "storage",
+    "conf": 0.9975
+   },
+   "F_map_remind": {
+    "captured": 0.9101,
+    "argmax": "R",
+    "missing": [],
+    "landing": "label",
+    "pick": "storage",
+    "conf": 0.9967
+   },
+   "G_answer_nl": {
+    "captured": 0.0,
+    "argmax": "R",
+    "missing": [
+     "L"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "R",
+    "missing": [
+     "J",
+     "K",
+     "M",
+     "N"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.9675,
+    "argmax": "R",
+    "missing": [],
+    "landing": "label",
+    "pick": "storage",
+    "conf": 0.995
+   }
+  },
+  "seconds": 5.4
+ },
+ {
+  "id": "cat_mesh",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 141,
+  "captured_plain": 0.9977,
+  "pick_plain": "networking",
+  "conf_plain": 0.9968,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0,
+    "argmax": "The",
+    "missing": [
+     "C",
+     "D",
+     "E",
+     "G",
+     "H",
+     "J",
+     "K",
+     "L",
+     "M",
+     "N",
+     "O",
+     "P",
+     "R",
+     "S"
+    ],
+    "landing": "other",
+    "pick": null,
+    "conf": null
+   },
+   "F_map_remind": {
+    "captured": 0.9907,
+    "argmax": "Q",
+    "missing": [],
+    "landing": "label",
+    "pick": "networking",
+    "conf": 0.979
+   },
+   "G_answer_nl": {
+    "captured": 0.0,
+    "argmax": "The",
+    "missing": [
+     "D",
+     "J",
+     "M",
+     "N",
+     "S"
+    ],
+    "landing": "other",
+    "pick": null,
+    "conf": null
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "Q",
+    "missing": [
+     "J",
+     "N"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.0,
+    "argmax": "Q",
+    "missing": [
+     "D",
+     "E",
+     "G",
+     "J",
+     "K",
+     "N"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   }
+  },
+  "seconds": 4.9
+ },
+ {
+  "id": "cat_standing_desk",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S"
+  ],
+  "keys": [
+   "laptops",
+   "laptop_accessories",
+   "monitors",
+   "keyboards",
+   "mice",
+   "headphones",
+   "earbuds",
+   "speakers",
+   "phone_cases",
+   "phone_chargers",
+   "smartwatches",
+   "fitness_trackers",
+   "tablets",
+   "e_readers",
+   "cameras",
+   "drones",
+   "networking",
+   "storage",
+   "none"
+  ],
+  "trace_words": 199,
+  "captured_plain": 0.9977,
+  "pick_plain": "none",
+  "conf_plain": 0.9967,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0,
+    "argmax": "S",
+    "missing": [
+     "M",
+     "N",
+     "O"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "F_map_remind": {
+    "captured": 0.0,
+    "argmax": "S",
+    "missing": [
+     "O"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "G_answer_nl": {
+    "captured": 0.7859,
+    "argmax": "S",
+    "missing": [],
+    "landing": "label",
+    "pick": "none",
+    "conf": 0.9717
+   },
+   "H_all": {
+    "captured": 0.0,
+    "argmax": "S",
+    "missing": [
+     "H",
+     "J",
+     "M",
+     "N",
+     "O",
+     "P"
+    ],
+    "landing": "label",
+    "pick": null,
+    "conf": null
+   },
+   "J_alphabet": {
+    "captured": 0.9386,
+    "argmax": "S",
+    "missing": [],
+    "landing": "label",
+    "pick": "none",
+    "conf": 0.9906
+   }
+  },
+  "seconds": 6.0
+ },
+ {
+  "id": "nest_ticket_last",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G"
+  ],
+  "keys": [
+   "login",
+   "billing",
+   "data_export",
+   "account_deletion",
+   "bug",
+   "feature_request",
+   "other"
+  ],
+  "trace_words": 140,
+  "captured_plain": 0.999,
+  "pick_plain": "account_deletion",
+  "conf_plain": 0.9995,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7241,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "account_deletion",
+    "conf": 0.9982
+   },
+   "F_map_remind": {
+    "captured": 0.8117,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "account_deletion",
+    "conf": 0.9978
+   },
+   "G_answer_nl": {
+    "captured": 0.802,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "account_deletion",
+    "conf": 0.9698
+   },
+   "H_all": {
+    "captured": 0.9098,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "account_deletion",
+    "conf": 0.9892
+   },
+   "J_alphabet": {
+    "captured": 0.9676,
+    "argmax": "D",
+    "missing": [],
+    "landing": "label",
+    "pick": "account_deletion",
+    "conf": 0.9877
+   }
+  },
+  "seconds": 4.5
+ },
+ {
+  "id": "nest_subject_trap",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G"
+  ],
+  "keys": [
+   "login",
+   "billing",
+   "data_export",
+   "account_deletion",
+   "bug",
+   "feature_request",
+   "other"
+  ],
+  "trace_words": 639,
+  "captured_plain": 0.9974,
+  "pick_plain": "data_export",
+  "conf_plain": 0.7507,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9865,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "data_export",
+    "conf": 0.9977
+   },
+   "F_map_remind": {
+    "captured": 0.9794,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "data_export",
+    "conf": 0.9979
+   },
+   "G_answer_nl": {
+    "captured": 0.8221,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "data_export",
+    "conf": 0.9435
+   },
+   "H_all": {
+    "captured": 0.9459,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "data_export",
+    "conf": 0.9691
+   },
+   "J_alphabet": {
+    "captured": 0.9903,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "data_export",
+    "conf": 0.9958
+   }
+  },
+  "seconds": 14.3
+ },
+ {
+  "id": "nest_owner",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "maya",
+   "raj",
+   "lee"
+  ],
+  "trace_words": 754,
+  "captured_plain": 0.9883,
+  "pick_plain": "raj",
+  "conf_plain": 0.997,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.6454,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "raj",
+    "conf": 0.979
+   },
+   "F_map_remind": {
+    "captured": 0.7747,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "raj",
+    "conf": 0.9965
+   },
+   "G_answer_nl": {
+    "captured": 0.502,
+    "argmax": "raj",
+    "missing": [],
+    "landing": "other",
+    "pick": "raj",
+    "conf": 0.5738
+   },
+   "H_all": {
+    "captured": 0.924,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "raj",
+    "conf": 0.9306
+   },
+   "J_alphabet": {
+    "captured": 0.9822,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "raj",
+    "conf": 0.7385
+   }
+  },
+  "seconds": 15.7
+ },
+ {
+  "id": "nest_conflict",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 252,
+  "captured_plain": 0.9952,
+  "pick_plain": "no",
+  "conf_plain": 0.9848,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9566,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9997
+   },
+   "F_map_remind": {
+    "captured": 0.9662,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9998
+   },
+   "G_answer_nl": {
+    "captured": 0.802,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9959
+   },
+   "H_all": {
+    "captured": 0.8572,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9968
+   },
+   "J_alphabet": {
+    "captured": 0.9866,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9997
+   }
+  },
+  "seconds": 6.2
+ },
+ {
+  "id": "inj_review",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "positive",
+   "neutral",
+   "negative"
+  ],
+  "trace_words": 200,
+  "captured_plain": 0.993,
+  "pick_plain": "negative",
+  "conf_plain": 0.9664,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9342,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9951
+   },
+   "F_map_remind": {
+    "captured": 0.8129,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9954
+   },
+   "G_answer_nl": {
+    "captured": 0.8321,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9032
+   },
+   "H_all": {
+    "captured": 0.9398,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9791
+   },
+   "J_alphabet": {
+    "captured": 0.9654,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.5777
+   }
+  },
+  "seconds": 4.7
+ },
+ {
+  "id": "inj_resume",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 432,
+  "captured_plain": 0.9921,
+  "pick_plain": "no",
+  "conf_plain": 0.9985,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.5306,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9987
+   },
+   "F_map_remind": {
+    "captured": 0.7544,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9984
+   },
+   "G_answer_nl": {
+    "captured": 0.5481,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9866
+   },
+   "H_all": {
+    "captured": 0.6288,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9858
+   },
+   "J_alphabet": {
+    "captured": 0.9457,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9993
+   }
+  },
+  "seconds": 9.3
+ },
+ {
+  "id": "inj_moderation",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "safe",
+   "harassment",
+   "spam"
+  ],
+  "trace_words": 794,
+  "captured_plain": 0.9927,
+  "pick_plain": "harassment",
+  "conf_plain": 0.9986,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.4751,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "harassment",
+    "conf": 0.9947
+   },
+   "F_map_remind": {
+    "captured": 0.9972,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "harassment",
+    "conf": 0.9947
+   },
+   "G_answer_nl": {
+    "captured": 0.5306,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "harassment",
+    "conf": 0.6266
+   },
+   "H_all": {
+    "captured": 0.7242,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "harassment",
+    "conf": 0.8905
+   },
+   "J_alphabet": {
+    "captured": 0.9797,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "harassment",
+    "conf": 0.9171
+   }
+  },
+  "seconds": 17.1
+ },
+ {
+  "id": "imp_churn",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 269,
+  "captured_plain": 0.9971,
+  "pick_plain": "yes",
+  "conf_plain": 0.8798,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0287,
+    "argmax": "The",
+    "missing": [],
+    "landing": "other",
+    "pick": "yes",
+    "conf": 0.5546
+   },
+   "F_map_remind": {
+    "captured": 0.9948,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7866
+   },
+   "G_answer_nl": {
+    "captured": 0.3594,
+    "argmax": "The",
+    "missing": [],
+    "landing": "other",
+    "pick": "yes",
+    "conf": 0.3584
+   },
+   "H_all": {
+    "captured": 0.8594,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.5964
+   },
+   "J_alphabet": {
+    "captured": 0.9898,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.0
+   }
+  },
+  "seconds": 6.5
+ },
+ {
+  "id": "imp_polite_no",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 314,
+  "captured_plain": 0.9989,
+  "pick_plain": "no",
+  "conf_plain": 0.9995,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0502,
+    "argmax": "The",
+    "missing": [],
+    "landing": "other",
+    "pick": "no",
+    "conf": 0.8298
+   },
+   "F_map_remind": {
+    "captured": 0.9954,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9866
+   },
+   "G_answer_nl": {
+    "captured": 0.6975,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9751
+   },
+   "H_all": {
+    "captured": 0.9283,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9719
+   },
+   "J_alphabet": {
+    "captured": 0.9697,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9913
+   }
+  },
+  "seconds": 7.6
+ },
+ {
+  "id": "imp_sarcastic_praise",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "positive",
+   "neutral",
+   "negative"
+  ],
+  "trace_words": 99,
+  "captured_plain": 0.9932,
+  "pick_plain": "negative",
+  "conf_plain": 0.9764,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9959,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.999
+   },
+   "F_map_remind": {
+    "captured": 0.9899,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9951
+   },
+   "G_answer_nl": {
+    "captured": 0.9107,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9787
+   },
+   "H_all": {
+    "captured": 0.9634,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9807
+   },
+   "J_alphabet": {
+    "captured": 0.974,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.7032
+   }
+  },
+  "seconds": 2.9
+ },
+ {
+  "id": "imp_backhanded",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "trace_words": 368,
+  "captured_plain": 0.9977,
+  "pick_plain": "2",
+  "conf_plain": 0.3852,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9992,
+    "argmax": "2",
+    "missing": [],
+    "landing": "label",
+    "pick": "2",
+    "conf": 0.9986
+   },
+   "F_map_remind": {
+    "captured": 0.9997,
+    "argmax": "2",
+    "missing": [],
+    "landing": "label",
+    "pick": "2",
+    "conf": 0.9993
+   },
+   "G_answer_nl": {
+    "captured": 0.9512,
+    "argmax": "2",
+    "missing": [],
+    "landing": "label",
+    "pick": "2",
+    "conf": 0.971
+   },
+   "H_all": {
+    "captured": 0.9613,
+    "argmax": "2",
+    "missing": [],
+    "landing": "label",
+    "pick": "2",
+    "conf": 0.9781
+   },
+   "J_alphabet": {
+    "captured": 0.9997,
+    "argmax": "2",
+    "missing": [],
+    "landing": "label",
+    "pick": "2",
+    "conf": 0.9986
+   }
+  },
+  "seconds": 9.6
+ },
+ {
+  "id": "imp_urgent_calm",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 807,
+  "captured_plain": 0.9951,
+  "pick_plain": "yes",
+  "conf_plain": 0.7616,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9719,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9338
+   },
+   "F_map_remind": {
+    "captured": 0.9992,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9719
+   },
+   "G_answer_nl": {
+    "captured": 0.8879,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.4621
+   },
+   "H_all": {
+    "captured": 0.9315,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7616
+   },
+   "J_alphabet": {
+    "captured": 0.9884,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9414
+   }
+  },
+  "seconds": 16.1
+ },
+ {
+  "id": "neg_double",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 807,
+  "captured_plain": 0.9928,
+  "pick_plain": "yes",
+  "conf_plain": 0.9338,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.6415,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8298
+   },
+   "F_map_remind": {
+    "captured": 0.9917,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7866
+   },
+   "G_answer_nl": {
+    "captured": 0.2694,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.2449
+   },
+   "H_all": {
+    "captured": 0.7236,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.4621
+   },
+   "J_alphabet": {
+    "captured": 0.9748,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7866
+   }
+  },
+  "seconds": 16.4
+ },
+ {
+  "id": "neg_except",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 792,
+  "captured_plain": 0.9981,
+  "pick_plain": "no",
+  "conf_plain": 0.9751,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9882,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9996
+   },
+   "F_map_remind": {
+    "captured": 0.9984,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9983
+   },
+   "G_answer_nl": {
+    "captured": 0.7001,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9766
+   },
+   "H_all": {
+    "captured": 0.9177,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9874
+   },
+   "J_alphabet": {
+    "captured": 0.9889,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9977
+   }
+  },
+  "seconds": 16.1
+ },
+ {
+  "id": "neg_symptom",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 523,
+  "captured_plain": 0.992,
+  "pick_plain": "no",
+  "conf_plain": 0.9988,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9962,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   },
+   "F_map_remind": {
+    "captured": 0.9997,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   },
+   "G_answer_nl": {
+    "captured": 0.9344,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9874
+   },
+   "H_all": {
+    "captured": 0.9575,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9828
+   },
+   "J_alphabet": {
+    "captured": 0.9967,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9961
+   }
+  },
+  "seconds": 11.1
+ },
+ {
+  "id": "code_sqli",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 289,
+  "captured_plain": 0.9966,
+  "pick_plain": "yes",
+  "conf_plain": 0.9414,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.063,
+    "argmax": "The",
+    "missing": [],
+    "landing": "other",
+    "pick": "yes",
+    "conf": 0.7982
+   },
+   "F_map_remind": {
+    "captured": 0.9897,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7341
+   },
+   "G_answer_nl": {
+    "captured": 0.5088,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.671
+   },
+   "H_all": {
+    "captured": 0.8694,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.5546
+   },
+   "J_alphabet": {
+    "captured": 0.9711,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.0624
+   }
+  },
+  "seconds": 7.2
+ },
+ {
+  "id": "code_sqli_safe",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 474,
+  "captured_plain": 0.9975,
+  "pick_plain": "no",
+  "conf_plain": 0.8483,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.5916,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   },
+   "F_map_remind": {
+    "captured": 0.7976,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9993
+   },
+   "G_answer_nl": {
+    "captured": 0.6976,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9618
+   },
+   "H_all": {
+    "captured": 0.7408,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9751
+   },
+   "J_alphabet": {
+    "captured": 0.9448,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9973
+   }
+  },
+  "seconds": 9.9
+ },
+ {
+  "id": "code_offbyone",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 229,
+  "captured_plain": 0.9981,
+  "pick_plain": "no",
+  "conf_plain": 0.9928,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.4988,
+    "argmax": "no",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "no",
+    "conf": 0.9986
+   },
+   "F_map_remind": {
+    "captured": 0.6781,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9986
+   },
+   "G_answer_nl": {
+    "captured": 0.6682,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9848
+   },
+   "H_all": {
+    "captured": 0.6943,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9902
+   },
+   "J_alphabet": {
+    "captured": 0.9713,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.997
+   }
+  },
+  "seconds": 5.3
+ },
+ {
+  "id": "code_commit_type",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "keys": [
+   "feature",
+   "fix",
+   "refactor",
+   "docs"
+  ],
+  "trace_words": 254,
+  "captured_plain": 0.9974,
+  "pick_plain": "fix",
+  "conf_plain": 0.9644,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9011,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "fix",
+    "conf": 0.998
+   },
+   "F_map_remind": {
+    "captured": 0.6492,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "fix",
+    "conf": 0.9952
+   },
+   "G_answer_nl": {
+    "captured": 0.7014,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "fix",
+    "conf": 0.9291
+   },
+   "H_all": {
+    "captured": 0.8947,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "fix",
+    "conf": 0.9886
+   },
+   "J_alphabet": {
+    "captured": 0.9657,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "fix",
+    "conf": 0.9835
+   }
+  },
+  "seconds": 5.8
+ },
+ {
+  "id": "lang_de_billing",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "billing",
+   "technical",
+   "sales"
+  ],
+  "trace_words": 143,
+  "captured_plain": 0.9927,
+  "pick_plain": "billing",
+  "conf_plain": 0.9952,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.6775,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "billing",
+    "conf": 0.9613
+   },
+   "F_map_remind": {
+    "captured": 0.513,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "billing",
+    "conf": 0.8934
+   },
+   "G_answer_nl": {
+    "captured": 0.8071,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "billing",
+    "conf": 0.9645
+   },
+   "H_all": {
+    "captured": 0.8424,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "billing",
+    "conf": 0.9364
+   },
+   "J_alphabet": {
+    "captured": 0.8938,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "billing",
+    "conf": 0.9139
+   }
+  },
+  "seconds": 3.9
+ },
+ {
+  "id": "lang_es_urgent",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 236,
+  "captured_plain": 0.9913,
+  "pick_plain": "yes",
+  "conf_plain": 0.954,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7563,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.978
+   },
+   "F_map_remind": {
+    "captured": 0.9934,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8798
+   },
+   "G_answer_nl": {
+    "captured": 0.6631,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8649
+   },
+   "H_all": {
+    "captured": 0.8722,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.7616
+   },
+   "J_alphabet": {
+    "captured": 0.9723,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.3027
+   }
+  },
+  "seconds": 5.7
+ },
+ {
+  "id": "lang_ja_sentiment",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C"
+  ],
+  "keys": [
+   "positive",
+   "neutral",
+   "negative"
+  ],
+  "trace_words": 135,
+  "captured_plain": 0.99,
+  "pick_plain": "negative",
+  "conf_plain": 0.9994,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.975,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9929
+   },
+   "F_map_remind": {
+    "captured": 0.9638,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9914
+   },
+   "G_answer_nl": {
+    "captured": 0.8745,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9819
+   },
+   "H_all": {
+    "captured": 0.9421,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.9721
+   },
+   "J_alphabet": {
+    "captured": 0.9733,
+    "argmax": "C",
+    "missing": [],
+    "landing": "label",
+    "pick": "negative",
+    "conf": 0.7894
+   }
+  },
+  "seconds": 3.6
+ },
+ {
+  "id": "nota_intent",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E"
+  ],
+  "keys": [
+   "check_balance",
+   "transfer",
+   "report_fraud",
+   "branch_hours",
+   "other"
+  ],
+  "trace_words": 183,
+  "captured_plain": 0.9955,
+  "pick_plain": "other",
+  "conf_plain": 0.9977,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9186,
+    "argmax": "E",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.995
+   },
+   "F_map_remind": {
+    "captured": 0.9365,
+    "argmax": "E",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9902
+   },
+   "G_answer_nl": {
+    "captured": 0.4787,
+    "argmax": "E",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.7955
+   },
+   "H_all": {
+    "captured": 0.8835,
+    "argmax": "E",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9062
+   },
+   "J_alphabet": {
+    "captured": 0.9423,
+    "argmax": "E",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9856
+   }
+  },
+  "seconds": 4.7
+ },
+ {
+  "id": "nota_topic",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G"
+  ],
+  "keys": [
+   "login",
+   "billing",
+   "data_export",
+   "account_deletion",
+   "bug",
+   "feature_request",
+   "other"
+  ],
+  "trace_words": 327,
+  "captured_plain": 0.9979,
+  "pick_plain": "other",
+  "conf_plain": 0.9949,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.8474,
+    "argmax": "G",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9969
+   },
+   "F_map_remind": {
+    "captured": 0.9212,
+    "argmax": "G",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9957
+   },
+   "G_answer_nl": {
+    "captured": 0.6814,
+    "argmax": "G",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9378
+   },
+   "H_all": {
+    "captured": 0.903,
+    "argmax": "G",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9245
+   },
+   "J_alphabet": {
+    "captured": 0.8785,
+    "argmax": "G",
+    "missing": [],
+    "landing": "label",
+    "pick": "other",
+    "conf": 0.9696
+   }
+  },
+  "seconds": 7.3
+ },
+ {
+  "id": "cite_partial",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 253,
+  "captured_plain": 0.9995,
+  "pick_plain": "no",
+  "conf_plain": 0.9998,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.8326,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9996
+   },
+   "F_map_remind": {
+    "captured": 0.8795,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9998
+   },
+   "G_answer_nl": {
+    "captured": 0.8483,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9959
+   },
+   "H_all": {
+    "captured": 0.852,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9964
+   },
+   "J_alphabet": {
+    "captured": 0.9829,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9988
+   }
+  },
+  "seconds": 5.7
+ },
+ {
+  "id": "cite_paraphrase",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 226,
+  "captured_plain": 0.9983,
+  "pick_plain": "yes",
+  "conf_plain": 0.9937,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7051,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9682
+   },
+   "F_map_remind": {
+    "captured": 0.8797,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9908
+   },
+   "G_answer_nl": {
+    "captured": 0.4643,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8093
+   },
+   "H_all": {
+    "captured": 0.5597,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8093
+   },
+   "J_alphabet": {
+    "captured": 0.978,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.964
+   }
+  },
+  "seconds": 5.6
+ },
+ {
+  "id": "cite_hedge",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 270,
+  "captured_plain": 0.9982,
+  "pick_plain": "no",
+  "conf_plain": 0.999,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9639,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9987
+   },
+   "F_map_remind": {
+    "captured": 0.9832,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   },
+   "G_answer_nl": {
+    "captured": 0.9152,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9928
+   },
+   "H_all": {
+    "captured": 0.92,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9896
+   },
+   "J_alphabet": {
+    "captured": 0.9964,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9991
+   }
+  },
+  "seconds": 6.3
+ },
+ {
+  "id": "ent_person_diff",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 251,
+  "captured_plain": 0.9853,
+  "pick_plain": "no",
+  "conf_plain": 0.9828,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7047,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9989
+   },
+   "F_map_remind": {
+    "captured": 0.7542,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9993
+   },
+   "G_answer_nl": {
+    "captured": 0.8003,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9902
+   },
+   "H_all": {
+    "captured": 0.7065,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9896
+   },
+   "J_alphabet": {
+    "captured": 0.9936,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9996
+   }
+  },
+  "seconds": 5.7
+ },
+ {
+  "id": "ent_company_alias",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 396,
+  "captured_plain": 0.9889,
+  "pick_plain": "yes",
+  "conf_plain": 0.8298,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.7752,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9719
+   },
+   "F_map_remind": {
+    "captured": 0.8662,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.9896
+   },
+   "G_answer_nl": {
+    "captured": 0.2683,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.8093
+   },
+   "H_all": {
+    "captured": 0.3544,
+    "argmax": "yes",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "yes",
+    "conf": 0.8093
+   },
+   "J_alphabet": {
+    "captured": 0.9874,
+    "argmax": "Yes",
+    "missing": [],
+    "landing": "label",
+    "pick": "yes",
+    "conf": 0.8649
+   }
+  },
+  "seconds": 9.0
+ },
+ {
+  "id": "ent_variant",
+  "type": "noul",
+  "labels": [
+   "Yes",
+   "No"
+  ],
+  "keys": [
+   "yes",
+   "no"
+  ],
+  "trace_words": 360,
+  "captured_plain": 0.993,
+  "pick_plain": "no",
+  "conf_plain": 0.954,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.4682,
+    "argmax": "no",
+    "missing": [],
+    "landing": "label-case",
+    "pick": "no",
+    "conf": 0.9992
+   },
+   "F_map_remind": {
+    "captured": 0.5617,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9986
+   },
+   "G_answer_nl": {
+    "captured": 0.7297,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9858
+   },
+   "H_all": {
+    "captured": 0.5462,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9848
+   },
+   "J_alphabet": {
+    "captured": 0.976,
+    "argmax": "No",
+    "missing": [],
+    "landing": "label",
+    "pick": "no",
+    "conf": 0.9992
+   }
+  },
+  "seconds": 8.0
+ },
+ {
+  "id": "sc_risk_mid",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 288,
+  "captured_plain": 0.9991,
+  "pick_plain": "0",
+  "conf_plain": 0.3633,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9992,
+    "argmax": "1",
+    "missing": [],
+    "landing": "label",
+    "pick": "1",
+    "conf": 0.9976
+   },
+   "F_map_remind": {
+    "captured": 0.9997,
+    "argmax": "1",
+    "missing": [],
+    "landing": "label",
+    "pick": "1",
+    "conf": 0.9995
+   },
+   "G_answer_nl": {
+    "captured": 0.9361,
+    "argmax": "1",
+    "missing": [],
+    "landing": "label",
+    "pick": "1",
+    "conf": 0.9854
+   },
+   "H_all": {
+    "captured": 0.9287,
+    "argmax": "1",
+    "missing": [],
+    "landing": "label",
+    "pick": "1",
+    "conf": 0.9854
+   },
+   "J_alphabet": {
+    "captured": 0.9978,
+    "argmax": "1",
+    "missing": [],
+    "landing": "label",
+    "pick": "1",
+    "conf": 0.9981
+   }
+  },
+  "seconds": 6.8
+ },
+ {
+  "id": "sc_risk_high",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 500,
+  "captured_plain": 0.9976,
+  "pick_plain": "3",
+  "conf_plain": 0.5081,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9981,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9983
+   },
+   "F_map_remind": {
+    "captured": 0.9999,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9993
+   },
+   "G_answer_nl": {
+    "captured": 0.8766,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9104
+   },
+   "H_all": {
+    "captured": 0.8966,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9503
+   },
+   "J_alphabet": {
+    "captured": 0.9957,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9902
+   }
+  },
+  "seconds": 11.2
+ },
+ {
+  "id": "sc_triage",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 631,
+  "captured_plain": 0.9996,
+  "pick_plain": "1",
+  "conf_plain": 0.6794,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9974,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.8692
+   },
+   "F_map_remind": {
+    "captured": 0.9972,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.7828
+   },
+   "G_answer_nl": {
+    "captured": 0.856,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.8387
+   },
+   "H_all": {
+    "captured": 0.8824,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.6998
+   },
+   "J_alphabet": {
+    "captured": 0.9978,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.8346
+   }
+  },
+  "seconds": 14.9
+ },
+ {
+  "id": "sc_triage_high",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 345,
+  "captured_plain": 0.9987,
+  "pick_plain": "3",
+  "conf_plain": 0.9996,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9973,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9998
+   },
+   "F_map_remind": {
+    "captured": 0.9977,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9994
+   },
+   "G_answer_nl": {
+    "captured": 0.8761,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9895
+   },
+   "H_all": {
+    "captured": 0.9033,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9897
+   },
+   "J_alphabet": {
+    "captured": 0.9956,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9973
+   }
+  },
+  "seconds": 7.6
+ },
+ {
+  "id": "sc_answer_quality",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 378,
+  "captured_plain": 0.9986,
+  "pick_plain": "3",
+  "conf_plain": 0.8653,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.999,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9952
+   },
+   "F_map_remind": {
+    "captured": 0.9996,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9982
+   },
+   "G_answer_nl": {
+    "captured": 0.9526,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9664
+   },
+   "H_all": {
+    "captured": 0.9644,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.9673
+   },
+   "J_alphabet": {
+    "captured": 0.998,
+    "argmax": "3",
+    "missing": [],
+    "landing": "label",
+    "pick": "3",
+    "conf": 0.992
+   }
+  },
+  "seconds": 8.7
+ },
+ {
+  "id": "sc_answer_wrong",
+  "type": "score",
+  "labels": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "keys": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "trace_words": 172,
+  "captured_plain": 0.998,
+  "pick_plain": "0",
+  "conf_plain": 0.4568,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.9992,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.9916
+   },
+   "F_map_remind": {
+    "captured": 0.9995,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.9873
+   },
+   "G_answer_nl": {
+    "captured": 0.9515,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.9356
+   },
+   "H_all": {
+    "captured": 0.9747,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.9299
+   },
+   "J_alphabet": {
+    "captured": 0.9982,
+    "argmax": "0",
+    "missing": [],
+    "landing": "label",
+    "pick": "0",
+    "conf": 0.9835
+   }
+  },
+  "seconds": 5.0
+ },
+ {
+  "id": "dec_deploy",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B"
+  ],
+  "keys": [
+   "deploy_now",
+   "wait"
+  ],
+  "trace_words": 581,
+  "captured_plain": 0.9907,
+  "pick_plain": "deploy_now",
+  "conf_plain": 0.3584,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0132,
+    "argmax": "deploy",
+    "missing": [],
+    "landing": "other",
+    "pick": "deploy_now",
+    "conf": 0.0
+   },
+   "F_map_remind": {
+    "captured": 0.002,
+    "argmax": "deploy",
+    "missing": [],
+    "landing": "other",
+    "pick": "deploy_now",
+    "conf": 0.5098
+   },
+   "G_answer_nl": {
+    "captured": 0.8668,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "deploy_now",
+    "conf": 0.8093
+   },
+   "H_all": {
+    "captured": 0.9108,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "deploy_now",
+    "conf": 0.8649
+   },
+   "J_alphabet": {
+    "captured": 0.9021,
+    "argmax": "A",
+    "missing": [],
+    "landing": "label",
+    "pick": "deploy_now",
+    "conf": 0.0
+   }
+  },
+  "seconds": 12.8
+ },
+ {
+  "id": "dec_deploy_risky",
+  "type": "choice",
+  "labels": [
+   "A",
+   "B"
+  ],
+  "keys": [
+   "deploy_now",
+   "wait"
+  ],
+  "trace_words": 279,
+  "captured_plain": 0.9965,
+  "pick_plain": "wait",
+  "conf_plain": 0.8649,
+  "cand": {
+   "D_mapping": {
+    "captured": 0.0852,
+    "argmax": "wait",
+    "missing": [],
+    "landing": "other",
+    "pick": "wait",
+    "conf": 0.978
+   },
+   "F_map_remind": {
+    "captured": 0.0205,
+    "argmax": "wait",
+    "missing": [],
+    "landing": "other",
+    "pick": "wait",
+    "conf": 0.9736
+   },
+   "G_answer_nl": {
+    "captured": 0.7582,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "wait",
+    "conf": 0.7866
+   },
+   "H_all": {
+    "captured": 0.7558,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "wait",
+    "conf": 0.9158
+   },
+   "J_alphabet": {
+    "captured": 0.9267,
+    "argmax": "B",
+    "missing": [],
+    "landing": "label",
+    "pick": "wait",
+    "conf": 0.9481
+   }
+  },
+  "seconds": 6.6
+ }
+]

@@ -20,8 +20,8 @@ from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 from llama_cpp import Llama
 
-from ..method import (ContextOverflow, Method, chat_messages, question_part,
-                      reasoning_messages, state_part)
+from ..method import (ContextOverflow, Method, chat_messages, label_constraint,
+                      question_part, reasoning_messages, state_part)
 from . import embed
 
 # Qwen3Guard's own template can only ask its fixed safety question, so it is
@@ -85,7 +85,7 @@ class NoReasoningBlock(ValueError):
     """The model's chat template has no reasoning block to put a trace into."""
 
 
-def splice_trace(prompt: str, trace: str) -> str:
+def splice_trace(prompt: str, trace: str, labels: list[str] | None = None) -> str:
     """`prompt` with `trace` inside its reasoning block, still ending where the label goes.
 
     The whole invariant lichen protects is that the prompt ends exactly at the answer position,
@@ -105,6 +105,12 @@ def splice_trace(prompt: str, trace: str) -> str:
             "this model's chat template has no reasoning block, so --thinking has nowhere to put "
             "the trace. Run it without --thinking, or use a model whose template opens <think>.")
     body = trace.strip()
+    if labels:
+        # The trace reasons about option content and never names a label, so the block ends by
+        # saying which tokens the answer may be. Without this the model continues in the trace's
+        # own register -- content words, or prose -- and the label read measures almost nothing.
+        # See method.label_constraint for the measurement.
+        body += "\n\n" + label_constraint(labels)
     return prompt[:at] + f"{THINK_OPEN}\n{body}\n{THINK_CLOSE}\n\n"
 
 
@@ -162,7 +168,7 @@ def render(name: str, model: Llama, case: dict, method: Method,
     # empty block, as the Qwen and Nemotron templates do with thinking off, so
     # the next token is the answer.
     if trace:
-        return splice_trace(prompt, trace), labels, keys
+        return splice_trace(prompt, trace, labels), labels, keys
     if prompt.endswith("<think>"):
         prompt += "</think>"
     return prompt, labels, keys

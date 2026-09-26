@@ -206,6 +206,27 @@ REASON_INSTRUCTION = ("Think this through. Weigh the options against the state a
                       "fits and why. Do not give a final one-word answer yet.")
 
 
+def label_constraint(labels: list[str]) -> str:
+    """The last line of a spliced reasoning block: which tokens the answer may be.
+
+    MEASURED, and it is the difference between --thinking working and not (Qwen3.8-27B, 50
+    JevBench hard cases; `bench/validate_thinking.py`). Without it the read's captured mass --
+    the label probability BEFORE renormalising -- averages 0.465 against 0.996 for the plain
+    one-forward-pass read, and only 24 of 50 cases put a label at the argmax at all: having
+    reasoned about option CONTENT (see unlettered_options), the model continues with the content
+    word or with prose, not the letter it must emit. With it, captured rises to 0.929 and all 50
+    argmaxes are labels.
+
+    It names the legal tokens and deliberately NOT which option each stands for. A version that
+    restated the letter-to-option mapping instead reached only 0.685, and one that did both 0.818:
+    the mapping is already in the prompt, so what the model is missing after a long trace is the
+    CONSTRAINT, not the correspondence. Keeping the mapping out also keeps this line the same for
+    every rotation, so it cannot reintroduce the letter dependence that a letterless trace exists
+    to avoid.
+    """
+    return "I must reply with exactly one of: " + ", ".join(labels) + "."
+
+
 def unlettered_options(question: dict, compact: bool = False) -> str:
     """The options as prose, with no letters attached — the reasoning stage's view.
 

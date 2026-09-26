@@ -77,7 +77,7 @@ from urllib import error, request
 
 import numpy
 
-from ..method import Method, chat_messages, reasoning_messages
+from ..method import Method, chat_messages, label_constraint, reasoning_messages
 
 
 THINK_OPEN, THINK_CLOSE = "<think>", "</think>"
@@ -194,7 +194,8 @@ class Endpoint:
         return self._post("/tokenize", {"model": self.served, "prompt": text,
                                         "add_special_tokens": False})["tokens"]
 
-    def splice_trace(self, ids: list[int], trace_ids: list[int]) -> list[int]:
+    def splice_trace(self, ids: list[int], trace_ids: list[int],
+                     labels: list[str] | None = None) -> list[int]:
         """`ids` with the trace inside its reasoning block, still ending where the label goes.
 
         The token-level twin of llamacpp.splice_trace, and it protects the same invariant: the
@@ -210,7 +211,13 @@ class Endpoint:
             raise NoReasoningBlock(
                 "this model's chat template opens no reasoning block, so --thinking has nowhere "
                 "to put the trace. Run it without --thinking, or use a thinking model.") from None
-        head = ids[:at + 1] + [nl] + list(trace_ids) + [nl]
+        body = list(trace_ids)
+        if labels:
+            # The trace reasons about option content and never names a label, so the block ends by
+            # saying which tokens the answer may be -- see method.label_constraint for what this
+            # is worth (captured mass 0.465 -> 0.929, and 24/50 argmaxes on a label -> 50/50).
+            body += self._fragment("\n\n" + label_constraint(labels))
+        head = ids[:at + 1] + [nl] + body + [nl]
         tail = ids[at + 1:]
         if closer in tail:
             return head + tail[tail.index(closer):]
@@ -311,7 +318,7 @@ class Endpoint:
         if trace_ids is None:
             top, tokens = self._chat_top(messages, ids)
         else:
-            top, tokens = self._spliced_top(messages, trace_ids, ids)
+            top, tokens = self._spliced_top(messages, trace_ids, labels, ids)
         missing = [l for l, i in zip(labels, ids) if i not in top]
         if missing:
             raise RuntimeError(
@@ -371,7 +378,7 @@ class Endpoint:
                 int((d.get("usage") or {}).get("prompt_tokens") or 0))
 
     def _spliced_top(self, messages: list[dict], trace_ids: list[int],
-                     ids: list[int]) -> tuple[dict[int, float], int]:
+                     labels: list[str], ids: list[int]) -> tuple[dict[int, float], int]:
         """Log-probabilities at the label position by token id, with the trace in the think block.
 
         Two round trips instead of one (render, then read), which --thinking has already paid for
@@ -379,7 +386,7 @@ class Endpoint:
         the spliced token ids verbatim, so the prompt the model sees is the one built here rather
         than one a chat template has re-rendered and trimmed.
         """
-        prompt = self.splice_trace(self._render(messages, thinking=False), trace_ids)
+        prompt = self.splice_trace(self._render(messages, thinking=False), trace_ids, labels)
         d = self._post("/v1/completions", {
             "model": self.served, "prompt": prompt, **self._read(ids),
             "logprobs": len(ids) if self.mask else self.top_logprobs,
