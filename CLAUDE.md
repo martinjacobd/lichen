@@ -1,0 +1,123 @@
+# Working in ~/src/lichen
+
+A **fork** of [Mushroom-Systems/lichen](https://github.com/Mushroom-Systems/lichen) — Jeff's
+drop-in replacement for Jev, TypeSafe's "System One" typed-decision model. Jeff is a friend;
+this started as a favour (he asked for replication before publicising) and became a fork.
+
+**Read `README.md` and `docs/RESULTS.md` first — they are his and they are good.** This file only
+records what is *ours* and what is not obvious from the code.
+
+## What lichen actually does
+
+One forward pass, no decoding loop. Build a prompt that ends exactly where the answer letter
+goes, then read the softmax over the label tokens (`A`, `B`, …) of that single next-token
+distribution. Everything else — option rotation, "fibers", `shrink`, calibration — is arithmetic
+on that probability vector. `label_probabilities` raises rather than guess if a label is not
+exactly one token, or if two labels share one.
+
+## Fork layout — branches
+
+- `main` tracks `origin/main` (upstream). Don't commit here.
+- `vllm-backend` — **broken, kept only as history.** Its call-time `import llama_cpp` binds
+  locally, so four `Evaluator` methods read an undefined global and every `--batch` request 500s
+  with `NameError`. `--batch` is the Docker default. Superseded by `backend-split`.
+- `backend-split` — current work. Three commits over upstream, pushed to `fork`.
+
+`origin` = upstream (read-only in practice), `fork` = github.com/martinjacobd/lichen.
+
+## What we changed, and why
+
+1. **`lichen/backends/`** — `llamacpp.py`, `vllm.py`, `embed.py`, with one dispatch in
+   `backends/__init__.py:backend_from()`. The seam is `label_probs(variants, method)`: the whole
+   set of a question's variants at once, so `--batch`'s Evaluator and vLLM's scheduler each get
+   to read them together. `method.answer()` shapes the reply for both, which is what keeps
+   `/v1/systemone` byte-compatible — the earlier vLLM code had its own copy of the fibered sum,
+   shrink and confidence, kept in step by hand.
+   **Invariant worth preserving:** `grep -rn llama_cpp lichen/` must hit only `backends/`.
+2. **`llama-cpp-python` is the `llamacpp` extra**, not a hard dependency. A plain install is a
+   working vLLM install; a GGUF without the extra exits with a message naming the fix. There is
+   deliberately no `vllm` extra — that backend reaches its engine over HTTP, so it would be empty.
+3. **`--vllm-endpoint`** serves the same method from a vLLM endpoint. Undocumented in `README.md`
+   on purpose: that is Jeff's call, not ours.
+
+### Two bugs we fixed that are HIS, and one that has a documentation consequence
+
+- **`last_logits` aliased llama.cpp's own logits buffer** (`912ed45`, pre-existing on upstream
+  `main`). The next `eval` overwrites it, and `runoff`'s unbatched branch is the one caller
+  holding two at once — so **`--runoff` without `--batch` could only flatten the top two options
+  to a tie**, and swap them, since `argmax` then takes the earlier key. **If the `--runoff`
+  numbers in `docs/RESULTS.md` (+3 hard for E4B, −4 for 26B-A4B) were measured without `--batch`,
+  they measured a tie-breaker.** Unresolved; worth asking him. This commit is self-contained and
+  is the one thing here worth offering upstream regardless of the rest.
+- **The vLLM path's `usage.input_tokens` was racy** (ours) — a shared counter on the backend with
+  a thread pool per request. Four concurrent copies of one request reported
+  `[2202, 1467, 1712, 1957]` where 1467 is correct.
+
+## Things that will bite
+
+- **vLLM needs `--max-logprobs >= options × fibers`.** Its default is 20; a wide choice exceeds
+  it *silently*, and a label missing from the top-N would read as probability zero. `label_probs`
+  checks and refuses.
+- **vLLM returns log-probabilities where the method wants logits.** Interchangeable here —
+  `log_softmax` differs by a per-position constant that cancels in the softmax over the label
+  subset — but only if they are **raw**. `--logprobs-mode` must be `raw_logprobs` (the default)
+  or `raw_logits`, never a `processed` mode.
+- **`enable_thinking=False` is load-bearing.** With thinking on, the first token is `<think>` and
+  every decision is garbage — silently, because a distribution still comes back.
+- **`Path("qwen3.8-27b-fp8").stem` is `"qwen3"`.** With `--vllm-endpoint`, `--model` is a
+  served-model-name and must not be stemmed.
+- **8192 `max-model-len` is not enough** for JevBench's hard tier under `--repeat 2`: a
+  3,746-token state doubles past it and vLLM returns 400. 32768 is comfortable.
+- **`--batch` is silently ignored with `--vllm-endpoint`** (vLLM batches natively), and
+  `ContextOverflow → 422` is llama.cpp-only; vLLM's equivalent 400 surfaces as a 500.
+- `--runoff` works on both backends now. `--recheck` and `--embedding` are llama.cpp-only.
+
+## Testing — there is none in the repo, and that is a real gap
+
+Byte-compat evidence lives in **`~/src/lichen-harness/`**, not here: `fakelib/` (a stub
+`llama_cpp`), `drive.py` (the llama.cpp flag matrix), `drive_vllm.py`, `conc.py` (the concurrency
+check), `models/` (a CPU Qwen2.5-0.5B GGUF). 11 of 12 flag sets are byte-identical to
+`origin/main` on a real CPU model; the twelfth is `runoff`, which differs because it is fixed.
+
+**Caveat that matters: the stub harness did NOT catch the logits-aliasing bug** — it allocated a
+fresh array per call, so the aliasing never bit and all 12 sets "passed" before and after the
+fix. Only the real library exposed it. Stub-only results prove less than they look like they do.
+
+Recreate the real-library venv (it was not moved; venvs bake absolute paths):
+
+    uv venv ~/src/lichen-harness/venv-real
+    uv pip install --python ~/src/lichen-harness/venv-real llama-cpp-python==0.3.35 numpy jinja2
+
+Rebuild upstream baselines for comparison:
+
+    git worktree add ../lichen-upstream origin/main --detach
+
+## Replication findings (2026-09-24), and what Jeff did with them
+
+Ours are in `~/sysadmin_things/lichen-replication.md`; the shareable write-up is at
+<https://claude.ai/artifact/C9AoJtaMKnxJHVQf7fS1BZ>. Headline numbers, JevBench public hard tier:
+
+| | |
+|---|---|
+| gemma-4-26B-A4B, no prompt techniques | 82/111 (his own run: 83) |
+| Jev 1.13.0 | 81/111 |
+| Qwen3.8-27B-FP8, plain → full stack | 76 → 88 (**p = 0.004**) |
+| our vLLM backend vs his llama.cpp Q8_0 | 88/111 vs 88/111, agreeing on 109 of 111 |
+
+He took the lot in `0ff9797` — the no-tricks baseline, the exact McNemar p = 0.09 against Jev,
+the cross-GPU caveat, the deployments-not-models latency note — and cites our run. So the
+critique is settled; don't relitigate it.
+
+**The one finding of ours he has not got:** the prompt techniques are worth far more on a model
+he never tried (+12 items on Qwen3.8-27B, p = 0.004) than on the gemma he ships (+4, ns). The
+recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
+
+## Also worth knowing
+
+- `~/sysadmin_things/gpu-manager/jev/jev_vllm.py` is the **pre-fork ancestor** of
+  `lichen/backends/vllm.py` — it loads lichen's `method` with a stubbed `llama_cpp`. Now
+  redundant; `dream/triage` still points at it, so it cannot just be deleted.
+- Benchmark harness: `~/sysadmin_things/gpu-manager/dream/triage` drives `/v1/systemone`, and
+  jevbench's `typesafe` adapter works against it unchanged. `--key-env ""` for a local endpoint.
+- Upstream's apt 404 was a transient Ubuntu mirror inconsistency, since resolved. His
+  `Acquire::Retries=5` cannot fix a 404; his README's archive-only stanza is the part that works.

@@ -20,7 +20,8 @@ from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 from llama_cpp import Llama
 
-from ..method import ContextOverflow, Method, chat_messages, question_part, state_part
+from ..method import (ContextOverflow, Method, chat_messages, question_part,
+                      reasoning_messages, state_part)
 from . import embed
 
 # Qwen3Guard's own template can only ask its fixed safety question, so it is
@@ -57,28 +58,84 @@ def _compiled(source: str):
     return env.from_string(source)
 
 
-def chat_prompt(model: Llama, messages: list[dict], template: str | None = None, **context) -> str:
+def chat_prompt(model: Llama, messages: list[dict], template: str | None = None,
+                thinking: bool = False, **context) -> str:
     """A chat template over `messages`, open for the assistant's reply.
 
     The model's own template unless `template` is given; `context` reaches the
-    template as extra variables.
+    template as extra variables. `thinking` is the template's enable_thinking: off for a
+    decision, whose next token must be the label, and on for the reasoning stage, which wants
+    the template to OPEN a reasoning block for the model to fill.
     """
     compiled = _compiled(template or model.metadata["tokenizer.chat_template"])
     return compiled.render(
         messages=messages,
         add_generation_prompt=True,
-        enable_thinking=False,
+        enable_thinking=thinking,
         bos_token=model.detokenize([model.token_bos()], special=True).decode(),
         eos_token=model.detokenize([model.token_eos()], special=True).decode(),
         **context,
     )
 
 
+THINK_OPEN, THINK_CLOSE = "<think>", "</think>"
+
+
+class NoReasoningBlock(ValueError):
+    """The model's chat template has no reasoning block to put a trace into."""
+
+
+def splice_trace(prompt: str, trace: str) -> str:
+    """`prompt` with `trace` inside its reasoning block, still ending where the label goes.
+
+    The whole invariant lichen protects is that the prompt ends exactly at the answer position,
+    and that is untouched here: the trace goes BEFORE that point, inside the block the template
+    already opens. Templates leave that block in one of two shapes -- open (`...<think>`, which
+    render() otherwise closes at once to get an empty one) or already closed and empty
+    (`<think></think>`, which Qwen and Nemotron emit with thinking off). Rewriting from the last
+    <think> onwards handles both.
+
+    A template with no block at all is refused rather than guessed at: injecting <think> tokens
+    into a model never trained on them produces confident nonsense, and silently, because a
+    distribution still comes back.
+    """
+    at = prompt.rfind(THINK_OPEN)
+    if at < 0:
+        raise NoReasoningBlock(
+            "this model's chat template has no reasoning block, so --thinking has nowhere to put "
+            "the trace. Run it without --thinking, or use a model whose template opens <think>.")
+    body = trace.strip()
+    return prompt[:at] + f"{THINK_OPEN}\n{body}\n{THINK_CLOSE}\n\n"
+
+
+def reason(name: str, model: Llama, case: dict, method: Method) -> str:
+    """Generate the reasoning trace for one case: the letterless prompt, decoded to </think>.
+
+    Greedy (temperature 0) on purpose. A sampled trace would make the label distribution
+    conditional on one draw of the reasoning, which is a different object from the deterministic
+    one lichen's calibration was built around; marginalising over k sampled traces is the
+    principled alternative and belongs behind its own flag, not here.
+    """
+    prompt = chat_prompt(model, reasoning_messages(case, method), thinking=True)
+    if prompt.rstrip().endswith(THINK_CLOSE):
+        # A template that closes the block even with thinking on gives the model nowhere to
+        # reason; reopen it so generation lands inside.
+        prompt = prompt.rstrip()[: -len(THINK_CLOSE)]
+    elif THINK_OPEN not in prompt:
+        raise NoReasoningBlock(
+            "this model's chat template opens no reasoning block even with enable_thinking=True, "
+            "so there is nothing for --thinking to fill.")
+    out = model.create_completion(prompt, max_tokens=method.thinking, temperature=0.0,
+                                  stop=[THINK_CLOSE], echo=False)
+    return out["choices"][0]["text"].strip()
+
+
 def render(name: str, model: Llama, case: dict, method: Method,
-           previous: str | None = None) -> tuple[str, list[str], list[str]]:
+           previous: str | None = None, trace: str | None = None) -> tuple[str, list[str], list[str]]:
     """The prompt for one case, and the labels to read and the keys they stand for.
 
-    `previous` is the label of a first answer to write back for a recheck.
+    `previous` is the label of a first answer to write back for a recheck. `trace`, when given,
+    is a reasoning trace to put inside the template's reasoning block (see splice_trace).
     """
     if "granite-guardian" in name:
         # Granite Guardian judges the user message against `custom_criteria` and
@@ -104,6 +161,8 @@ def render(name: str, model: Llama, case: dict, method: Method,
     # leave it out (LFM2.5 always ends in "<think>"). Closing it at once gives an
     # empty block, as the Qwen and Nemotron templates do with thinking off, so
     # the next token is the answer.
+    if trace:
+        return splice_trace(prompt, trace), labels, keys
     if prompt.endswith("<think>"):
         prompt += "</think>"
     return prompt, labels, keys
@@ -304,21 +363,30 @@ class Gguf:
         # 256 and the Evaluator holds this one, so it is worth reporting.
         self.name, self.model, self.evaluator, self.where = name, model, evaluator, f"n_ctx {n_ctx}"
 
-    def label_probs(self, asked: list[dict], method: Method) -> tuple[list[numpy.ndarray], int]:
-        """The label probabilities of each variant, and the tokens evaluated for them."""
+    def reason(self, case: dict, method: Method) -> str:
+        return reason(self.name, self.model, case, method)
+
+    def label_probs(self, asked: list[dict], method: Method,
+                    trace: str | None = None) -> tuple[list[numpy.ndarray], int]:
+        """The label probabilities of each variant, and the tokens evaluated for them.
+
+        `trace` is one reasoning trace shared by every variant, so the only thing that differs
+        between them is the letter assignment — which is what rotations and fibers average over.
+        """
         if method.batch and not method.recheck:
-            rendered = [render(self.name, self.model, v, method) for v in asked]
+            rendered = [render(self.name, self.model, v, method, trace=trace) for v in asked]
             logits, tokens = batched_logits(self.evaluator, [prompt for prompt, _, _ in rendered])
             return [label_probabilities(self.model, row, labels, method.temperature)
                     for (_, labels, _), row in zip(rendered, logits, strict=True)], tokens
         probs, tokens = [], 0
         for variant in asked:
-            prompt, labels, _ = render(self.name, self.model, variant, method)
+            prompt, labels, _ = render(self.name, self.model, variant, method, trace=trace)
             p = label_probabilities(self.model, last_logits(self.model, prompt), labels, method.temperature)
             tokens += self.model.n_tokens
             if method.recheck:
                 first = labels[int(numpy.argmax(p))].strip()
-                prompt, labels, _ = render(self.name, self.model, variant, method, previous=first)
+                prompt, labels, _ = render(self.name, self.model, variant, method,
+                                           previous=first, trace=trace)
                 p = label_probabilities(self.model, last_logits(self.model, prompt), labels, method.temperature)
                 tokens += self.model.n_tokens
             probs.append(p)

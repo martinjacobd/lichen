@@ -94,6 +94,7 @@ class Method:
     shrink: bool = False
     runoff: float = 0.0
     temperature: float = 1.0
+    thinking: int = 0
 
 
 # Choice labels, in order. Each is one token in the models measured; a backend
@@ -201,6 +202,56 @@ def chat_messages(case: dict, method: Method,
     return messages, labels, keys
 
 
+REASON_INSTRUCTION = ("Think this through. Weigh the options against the state and say which one "
+                      "fits and why. Do not give a final one-word answer yet.")
+
+
+def unlettered_options(question: dict, compact: bool = False) -> str:
+    """The options as prose, with no letters attached — the reasoning stage's view.
+
+    Deliberately letterless, and in the question's CANONICAL order. A trace generated with the
+    options already lettered commits to a letter, and then it is wrong for every rotation but
+    one: `rotations` exists precisely to average over which letter means which option, and a
+    trace that names "B" poisons that. Reasoning about option CONTENT instead makes a single
+    trace valid for every rotation and every fiber block, so thinking costs one decoding loop
+    per CASE rather than one per variant, and rotation keeps doing exactly its job.
+    """
+    criteria = question.get("criteria") or {}
+    match question["type"]:
+        case "choice":
+            # The canonical keys, not fiber_keys: a fibered variant lists the same options
+            # several times over, which is a letter-assignment device and nothing to reason about.
+            # SORTED, so the trace does not depend on the order it was asked in. `rotations`
+            # rewrites criteria in a rotated order, and iterating dict order would make this
+            # prompt -- and so the trace -- differ per rotation, which is exactly what reasoning
+            # about content instead of letters is meant to avoid. probabilities() happens to call
+            # reason() with the unrotated case, but relying on that is discipline; this is a
+            # property.
+            return "Options:\n" + "\n".join(
+                "- " + k + (f": {text(criteria[k], compact)}" if criteria.get(k) else "")
+                for k in sorted(criteria))
+        case "noul":
+            if not criteria:
+                return "Answer yes or no."
+            return "".join(f"{label} would mean: {text(criteria[key], compact)}\n"
+                           for label, key in (("Yes", "true"), ("No", "false"))
+                           if criteria.get(key) is not None)
+        case "score":
+            # The levels ARE ordinal here, so their numbers carry meaning and stay.
+            return "Levels:\n" + "\n".join(f"- {i}. {text(level, compact)}"
+                                            for i, level in enumerate(criteria))
+    raise ValueError(question["type"])
+
+
+def reasoning_messages(case: dict, method: Method) -> list[dict]:
+    """Messages for the reasoning stage: the case as it really is, with no answer letters."""
+    question = case["question"]
+    head = f"Question: {text(question['instructions'], method.compact_json)}"
+    body = "\n\n".join([state_part(case["state"], method.compact_json), head,
+                         unlettered_options(question, method.compact_json), REASON_INSTRUCTION])
+    return [{"role": "system", "content": method.system}, {"role": "user", "content": body}]
+
+
 def confidence(p: numpy.ndarray) -> float:
     """TypeSafe's documented Choice confidence: (n * peak - 1) / (n - 1), clamped to [0, 1].
 
@@ -265,14 +316,17 @@ def probabilities(backend, case: dict, method: Method) -> tuple[numpy.ndarray, l
     """
     keys = answer_keys(case["question"])
     asked = variants(case, method)
-    probs, tokens = backend.label_probs(asked, method)
+    # One trace per CASE, shared by every variant — see unlettered_options for why that is both
+    # cheaper and more correct than reasoning per variant.
+    trace = backend.reason(case, method) if method.thinking else None
+    probs, tokens = backend.label_probs(asked, method, trace)
     parts = []
     for variant, p in zip(asked, probs, strict=True):
         parts += readings(p, answer_keys(variant["question"]))
     total = combine(parts, len(asked), keys)
     lam = disagreement(parts)
     if method.runoff and case["question"]["type"] == "choice" and len(keys) > 2 and lam > method.runoff:
-        total, more, extra = runoff(backend, case, method, keys, total)
+        total, more, extra = runoff(backend, case, method, keys, total, trace)
         tokens, parts = tokens + more, parts + extra
     if method.shrink:
         total = (1 - lam) * total + lam / len(keys)
@@ -280,7 +334,7 @@ def probabilities(backend, case: dict, method: Method) -> tuple[numpy.ndarray, l
 
 
 def runoff(backend, case: dict, method: Method, keys: list[str],
-           total: numpy.ndarray) -> tuple[numpy.ndarray, int, list[dict]]:
+           total: numpy.ndarray, trace: str | None = None) -> tuple[numpy.ndarray, int, list[dict]]:
     """Ask the two leading options alone, in both orders, and split their mass by that answer.
 
     The other options keep their probabilities. Returns the new P, the tokens
@@ -290,8 +344,11 @@ def runoff(backend, case: dict, method: Method, keys: list[str],
     criteria = case["question"]["criteria"]
     pair = {**case, "question": {**case["question"], "criteria": {a: criteria[a], b: criteria[b]}}}
     asked = rotations(pair)
-    # The runoff round is one ask per order, never a recheck of itself.
-    probs, tokens = backend.label_probs(asked, replace(method, recheck=False))
+    # The runoff round is one ask per order, never a recheck of itself. It reuses the SAME trace:
+    # the reasoning already weighed these two options among the others, and regenerating it for a
+    # narrowed option set would make the runoff answer a different question than the one whose
+    # disagreement triggered it.
+    probs, tokens = backend.label_probs(asked, replace(method, recheck=False), trace)
     extra = [dict(zip(answer_keys(v["question"]), map(float, p), strict=True))
              for v, p in zip(asked, probs, strict=True)]
     share = numpy.mean([r[a] / (r[a] + r[b]) for r in extra])
@@ -345,6 +402,13 @@ def positive(value: str) -> int:
     return n
 
 
+def nonnegative(value: str) -> int:
+    n = int(value)
+    if n < 0:
+        raise argparse.ArgumentTypeError(f"{value} is negative")
+    return n
+
+
 def method_arguments(ap: argparse.ArgumentParser) -> None:
     ap.add_argument("--permute", action="store_true", help="average each choice over every rotation of its options")
     ap.add_argument("--repeat", type=positive, default=1, help="put the state and question in the prompt this many times")
@@ -367,6 +431,10 @@ def method_arguments(ap: argparse.ArgumentParser) -> None:
                     help="divide the label logits by T before the softmax (1: off)")
     ap.add_argument("--runoff", type=float, default=0.0, metavar="D",
                     help="re-ask a choice's top two options when its readings disagree by more than D (0: off)")
+    ap.add_argument("--thinking", type=nonnegative, default=0, metavar="N",
+                    help="let the model reason for up to N tokens before the label is read (0: off). "
+                         "Costs a decoding loop per question, so the single-forward-pass speed is "
+                         "gone; the typed answer and its calibrated probabilities are not")
     # The last three reach a llama.cpp model rather than the method; they are
     # listed here so that --help stays one list.
     ap.add_argument("--n-ubatch", type=positive, default=1024, help="tokens per GPU pass in the --batch evaluator")
@@ -379,7 +447,10 @@ def method_arguments(ap: argparse.ArgumentParser) -> None:
 def method_from(args: argparse.Namespace, guard: bool) -> Method:
     if args.batch and args.recheck:
         raise SystemExit("--recheck does not work with --batch")
+    if args.thinking and args.embedding:
+        raise SystemExit("--thinking needs a model that generates; --embedding answers by "
+                         "cosine similarity and never produces a token")
     return Method(SYSTEM + GUARD if guard else SYSTEM, args.permute, args.repeat, args.options_once,
                   args.question_first, args.compact_json, args.rotate_last, args.batch, args.recheck,
                   args.embedding, args.fibers, args.fiber_same, args.fiber_map,
-                  args.shrink, args.runoff, args.temperature)
+                  args.shrink, args.runoff, args.temperature, args.thinking)

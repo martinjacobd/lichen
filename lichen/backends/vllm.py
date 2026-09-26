@@ -49,12 +49,13 @@ installed: the engine is reached over HTTP, and a `pip install lichen` is the wh
 """
 
 import json
+import re
 from concurrent.futures import ThreadPoolExecutor
 from urllib import error, request
 
 import numpy
 
-from ..method import Method, chat_messages
+from ..method import Method, chat_messages, reasoning_messages
 
 
 class Endpoint:
@@ -146,17 +147,47 @@ class Endpoint:
         if len(set(ids)) != len(ids):
             raise ValueError(f"labels share a token: {labels} -> {ids}")
 
-    def label_probs(self, asked: list[dict], method: Method) -> tuple[list[numpy.ndarray], int]:
+    def reason(self, case: dict, method: Method) -> str:
+        """The reasoning trace for one case, from the letterless prompt.
+
+        Greedy, and thinking forced ON for this call regardless of the endpoint's default -- the
+        point of the stage is to obtain a trace. The reply's reasoning_content is preferred when
+        the server's reasoning parser split it out, with a fallback to content for a server that
+        leaves <think> inline.
+        """
+        body = {
+            "model": self.served, "messages": reasoning_messages(case, method),
+            "max_tokens": method.thinking, "temperature": 0.0,
+            "chat_template_kwargs": {"enable_thinking": True},
+        }
+        d = self._post("/v1/chat/completions", body)
+        msg = d["choices"][0].get("message") or {}
+        trace = (msg.get("reasoning_content") or "").strip()
+        if not trace:
+            raw = (msg.get("content") or "")
+            inner = re.search(r"<think>(.*?)(?:</think>|$)", raw, re.S)
+            trace = (inner.group(1) if inner else raw).strip()
+        if not trace:
+            raise RuntimeError(
+                "the endpoint returned no reasoning for --thinking. Either the model does not "
+                "think, or max_tokens was too small to produce any; raise --thinking.")
+        return trace
+
+    def label_probs(self, asked: list[dict], method: Method,
+                    trace: str | None = None) -> tuple[list[numpy.ndarray], int]:
         """The label probabilities of each variant, and the prompt tokens the endpoint charged.
 
         The whole point of the port: hand every rotation or fibered prompt over at once and let
         vLLM's scheduler batch them, rather than walking them one at a time.
+
+        `trace` is one reasoning trace shared by every variant, so the only difference between
+        them stays the letter assignment that rotations and fibers exist to average over.
         """
         rendered = [chat_messages(v, method) for v in asked]
         self.check_model(rendered[0][0])
 
         def one(r):
-            return self._probs(r[0], r[1], method.temperature)
+            return self._probs(r[0], r[1], method.temperature, trace)
 
         if len(rendered) == 1:
             read = [one(rendered[0])]
@@ -166,7 +197,7 @@ class Endpoint:
         return [p for p, _ in read], sum(tokens for _, tokens in read)
 
     def _probs(self, messages: list[dict], labels: list[str],
-               temperature: float) -> tuple[numpy.ndarray, int]:
+               temperature: float, trace: str | None = None) -> tuple[numpy.ndarray, int]:
         """One prompt: the softmax over its label tokens, and the tokens it cost.
 
         The count is returned rather than added to the endpoint, which several threads and
@@ -176,6 +207,17 @@ class Endpoint:
         ids = [self._tokens[l] for l in labels]
         if len(ids) > self.top_logprobs:
             raise ValueError(f"{len(ids)} labels; --top-logprobs is {self.top_logprobs}")
+        thinking = self.thinking
+        if trace:
+            # There is no rendered prompt to splice into here -- the server applies the template
+            # -- so the trace goes in as a partial ASSISTANT turn that the server continues.
+            # add_generation_prompt=False + continue_final_message=True is vLLM's assistant
+            # prefill: the reply resumes from the end of that content, which is immediately after
+            # </think>, so the next token is still the label. enable_thinking stays OFF so the
+            # template does not open a SECOND block in front of the one we just supplied.
+            messages = messages + [{"role": "assistant",
+                                    "content": f"<think>\n{trace.strip()}\n</think>\n\n"}]
+            thinking = False
         body = {
             "model": self.served, "messages": messages,
             "max_tokens": 1, "temperature": 0.0,
@@ -192,8 +234,11 @@ class Endpoint:
             # thinking on, the first token is <think> and every decision is garbage -- silently,
             # since a distribution still comes back. A chat template defaults it to true, so this
             # override per request is what makes the method work at all.
-            "chat_template_kwargs": {"enable_thinking": self.thinking},
+            "chat_template_kwargs": {"enable_thinking": thinking},
         }
+        if trace:
+            body["add_generation_prompt"] = False
+            body["continue_final_message"] = True
         d = self._post("/v1/chat/completions", body)
         tokens = int((d.get("usage") or {}).get("prompt_tokens") or 0)
         content = (d["choices"][0].get("logprobs") or {}).get("content") or []
