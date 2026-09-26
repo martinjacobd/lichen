@@ -127,22 +127,51 @@ recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
 - Upstream's apt 404 was a transient Ubuntu mirror inconsistency, since resolved. His
   `Acquire::Retries=5` cannot fix a 404; his README's archive-only stanza is the part that works.
 
-## `--thinking`: still to do before trusting it
+## `--thinking`: validated live 2026-09-26, and what it showed
 
-Built on the `thinking` branch, unvalidated live. In order:
+Run against Qwen3.8-27B-FP8 on leviathan (vLLM 0.29.0) over all 50 JevBench hard cases:
+`bench/validate_thinking.py`, data in `results/thinking-paired-qwen38-27b-hard.json`. Step 1 is
+**done**; it found two silent bugs (both fixed in `f53cdac` — see that commit message for the
+mechanisms) and one design flaw that is still open.
 
-1. **Run it against a real thinking model.** Ornith 1.5-35B on the 5080 (`gpum up
-   local-ornith-mtp`) or the Qwen3.8-27B on leviathan via `--vllm-endpoint`. Check first that
-   the trace is non-empty and that the label read still lands on a label rather than `<think>`
-   — the failure mode is silent, since a distribution comes back either way.
-2. **Remeasure `shrink` and `confidence`.** Their constants were fit on one-forward-pass
-   distributions. Thinking usually sharpens the peak, so the existing shrink will
-   under-correct and confidence will read high. Compare the label-probability distributions
-   with and without `--thinking` on JevBench's hard tier before quoting any accuracy number.
-3. **Then the accuracy question**, which is the interesting one: does reasoning-before-label
-   beat one forward pass on the hard tier, and by enough to justify a decoding loop per item?
-   Use the paired exact McNemar in `gpum eval compare`'s style — the items are identical, so
-   comparing proportions would waste most of the power.
+**The open problem: the read loses its label alphabet after a letterless trace.** `captured` is
+the label probability mass BEFORE renormalising — what the read actually sees:
+
+| type | n | landing (thinking) | captured plain | captured think |
+|---|---|---|---|---|
+| choice | 18 | 16 off-label, 2 label | 0.995 | **0.140** |
+| noul | 23 | 3 off-label, 5 wrong case, 15 label | 0.996 | **0.597** |
+| score | 7 | 7 label | 0.998 | 1.000 |
+
+Plain is 48/48 on a label, captured min 0.985. Thinking averages 0.485 and bottoms out at 0.0000,
+while `confidence` **rises** 0.874 → 0.916, because renormalising over the labels hides the
+collapse entirely. (Two more cases raised "labels missing from top-64" — the guard working.)
+
+`unlettered_options` is the cause, and `score` is the proof: the one type whose reasoning prompt
+keeps its labels — the levels are ordinal, so their numbers stay — is the one type that reads
+perfectly. Strip them and the model, having reasoned about option CONTENT, continues with content
+or prose (argmax `'deploy'`, `'fitness'`, `'storage'`, `'The'`) instead of the letter. Letterless
+traces are load-bearing for rotation-invariance — one trace per case rather than one per variant —
+so this is a genuine tension, not an oversight.
+
+**Do not quote a --thinking accuracy number until the read has a bridge back to the labels.** The
+43/48 agreement with the plain read is not evidence of health when the read is renormalising
+noise. In order, now:
+
+1. **Give the post-trace prompt a label cue, and measure `captured` for each candidate.** The
+   splice may legitimately end with a cue, since the invariant is only that the prompt ends where
+   the label goes: `</think>\n\nAnswer: ` is the obvious one, restating the lettered mapping
+   after the block is the other. `captured` is the objective function — anything below ~0.9 is
+   still reading noise. `bench/validate_thinking.py` already reports it per case and per type.
+2. **Then remeasure `shrink` and `confidence`,** which is only meaningful once the read is sound.
+   Note the extra wrinkle the run turned up: 5 noul cases landed on the wrong CASE of the label
+   (`'yes'` for `'Yes'`), because the model echoes its own trace's casing — so mass leaks even
+   when the argmax is label-shaped.
+3. **Then the accuracy question,** with the paired exact McNemar in `gpum eval compare`'s style.
+
+`bench/validate_thinking.py` is the harness for all three: it classifies each read as
+`label` / `label-case` / `other` and reports captured mass, rather than trusting the label
+softmax — which is what made both original bugs invisible.
 
 A deliberate non-goal: sampling k traces and averaging the label vectors (a principled
 marginalisation over reasoning, and strictly better than majority voting since it uses the
