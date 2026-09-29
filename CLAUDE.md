@@ -75,7 +75,14 @@ exactly one token, or if two labels share one.
 - **vLLM is not batch-invariant.** The same request moves label probabilities by up to ~0.03
   (Qwen3.8, ours) / 0.09 (gemma, Jeff's) — enough to flip a borderline item — and a ~500-token
   greedy trace diverges outright (39 of 47 differ between two runs). `VLLM_BATCH_INVARIANT=1`
-  fixed it for Jeff (231/231 identical, +23% latency); not yet in gpum's compose.
+  fixed it for Jeff (231/231 identical, +23% latency) but **cannot run Qwen3.8 on vLLM 0.29**:
+  it forces Triton attention (no FP8 KV below SM89 — fixable with `KV_CACHE_DTYPE=auto`) and
+  then refuses outright: "batch_invariant mode is not supported for GDN_ATTN". gpum's compose
+  has the knob anyway (default 0). **What works instead: `MAX_NUM_SEQS=1`.** Read noise went to
+  exactly 0 on 270 short prompts (masked == unmasked to 4 dp), for ~15% wall time on
+  mask_check. Not perfect on long prompts: a full JevBench rerun gave identical predictions on
+  231/231 but probs differing by <= 0.03 on 8 long_policy items — probably chunked prefill
+  (MAX_NUM_BATCHED_TOKENS 8192) meeting a different prefix-cache state; unconfirmed.
 - **With `MAX_NUM_SEQS=16` the Qwen preset crash-loops at the default 262K context** (KV cache
   4.48 GiB < 4.64 needed; `restart: unless-stopped` hides it as "did not reach serving"). Add
   `MAX_MODEL_LEN=32768`.
@@ -127,9 +134,17 @@ He took the lot in `0ff9797` — the no-tricks baseline, the exact McNemar p = 0
 the cross-GPU caveat, the deployments-not-models latency note — and cites our run. So the
 critique is settled; don't relitigate it.
 
-**The one finding of ours he has not got:** the prompt techniques are worth far more on a model
-he never tried (+12 items on Qwen3.8-27B, p = 0.004) than on the gemma he ships (+4, ns). The
-recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
+**The one finding of ours he has not got:** the prompt techniques are worth far more on
+Qwen3.8-27B than on the gemma he ships — confirmed on all 231 v1.4 items 2026-09-29, plain 190 →
+image config 206 (19 gained, 3 lost, p = 0.001; hard 74 → 88), against gemma's 83 → 88 hard.
+
+**RETRACTED 2026-09-29: "ship Qwen3.8-27B".** Measured on the full v1.4 public set with the
+image config (masked read, `MAX_NUM_SEQS=1`, `bench/jevbench_v14_qwen.sh`,
+`results/jevbench-v14/`), Qwen3.8-27B-FP8 scores 206/231, hard 88/111. The repo's gemma-4-26B-A4B
+QAT run scores 207/231, hard 88/111 — paired, 9 items each way on hard, **p = 1.0**. The techniques
+lift Qwen *up to* gemma, not past it, and gemma is the smaller, cheaper model. Against Jev 1.13.0
+Qwen is +7 hard (14 vs 7 discordant, p = 0.19), not significant. The earlier "+12, p = 0.004"
+was plain vs full-stack *within* Qwen, which never justified a cross-model recommendation.
 
 ## Jeff's review of `backend-split` (2026-09-29)
 
