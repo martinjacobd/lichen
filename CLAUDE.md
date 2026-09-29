@@ -21,12 +21,10 @@ exactly one token, or if two labels share one.
 - `vllm-backend` — **broken, kept only as history.** Its call-time `import llama_cpp` binds
   locally, so four `Evaluator` methods read an undefined global and every `--batch` request 500s
   with `NameError`. `--batch` is the Docker default. Superseded by `backend-split`.
-- `backend-split` — three commits over upstream, pushed to `fork`.
-- `thinking` — branched off `backend-split` 2026-09-26. `--thinking N` lets the model reason
-  before the label is read. **Prompt construction verified against a stub; NOT yet run against a
-  real thinking model** (both GPUs were unavailable), and `shrink`/`confidence` still carry
-  constants fit on no-thinking distributions. See the commit message for the design; the two
-  things to do first are in the "Still to do" section below.
+- `backend-split` — six commits over upstream, pushed to `fork`. The last three answer Jeff's
+  review (below): his label-mask patch (`cd3ea3a`, his authorship), and two of ours.
+- `thinking` — `--thinking N` lets the model reason before the label is read. Rebased onto
+  `backend-split` 2026-09-29; validated live, see the `--thinking` section below.
 
 `origin` = upstream (read-only in practice), `fork` = github.com/martinjacobd/lichen.
 
@@ -60,13 +58,29 @@ exactly one token, or if two labels share one.
 
 ## Things that will bite
 
-- **vLLM needs `--max-logprobs >= options × fibers`.** Its default is 20; a wide choice exceeds
-  it *silently*, and a label missing from the top-N would read as probability zero. `label_probs`
-  checks and refuses.
-- **vLLM returns log-probabilities where the method wants logits.** Interchangeable here —
-  `log_softmax` differs by a per-position constant that cancels in the softmax over the label
-  subset — but only if they are **raw**. `--logprobs-mode` must be `raw_logprobs` (the default)
-  or `raw_logits`, never a `processed` mode.
+- **The vLLM endpoint MUST run `--logprobs-mode processed_logprobs`** (this reversed on
+  2026-09-29 — it used to be "raw, never processed"). Each read sends `allowed_token_ids` = the
+  label tokens, and only a processed mode takes the log-probs after that mask. On a raw server
+  the masked read refuses most wide choices (197 of 270 prompts), so the mistake is loud.
+  gpum: `LOGPROBS_MODE=processed_logprobs ./gpum up qwen3.8-27b-fp8` (the knob is ours, added
+  2026-09-29; empty = vLLM's default, raw).
+- **processed mode puts the server's sampling defaults into the read.** vLLM fills whatever a
+  request omits from `generation_config` / `--override-generation-config`; greedy resets
+  top-k/top-p/min-p but not the penalties, and a `repetition_penalty != 1` would scale label
+  tokens the prompt contains. `_read` and `reason()` pin all three penalties. Keep it that way.
+- **The mask blinds `captured`** (label mass is 1 by construction), so a read at the wrong
+  position looks healthy. Diagnostics set `Endpoint.mask = False` — `bench/diag.py`. Never
+  validate a read-position change with the mask on.
+- **`--max-logprobs >= options × fibers`, at most 62** (= `len(LABELS)`); vLLM's default is 20.
+- **vLLM is not batch-invariant.** The same request moves label probabilities by up to ~0.03
+  (Qwen3.8, ours) / 0.09 (gemma, Jeff's) — enough to flip a borderline item — and a ~500-token
+  greedy trace diverges outright (39 of 47 differ between two runs). `VLLM_BATCH_INVARIANT=1`
+  fixed it for Jeff (231/231 identical, +23% latency); not yet in gpum's compose.
+- **With `MAX_NUM_SEQS=16` the Qwen preset crash-loops at the default 262K context** (KV cache
+  4.48 GiB < 4.64 needed; `restart: unless-stopped` hides it as "did not reach serving"). Add
+  `MAX_MODEL_LEN=32768`.
+- **Guardian, Qwen3Guard and open-`<think>` templates are refused on vLLM** (`check_model`):
+  their prompts exist only in `llamacpp.render`.
 - **`enable_thinking=False` is load-bearing.** With thinking on, the first token is `<think>` and
   every decision is garbage — silently, because a distribution still comes back.
 - **`Path("qwen3.8-27b-fp8").stem` is `"qwen3"`.** With `--vllm-endpoint`, `--model` is a
@@ -117,6 +131,24 @@ critique is settled; don't relitigate it.
 he never tried (+12 items on Qwen3.8-27B, p = 0.004) than on the gemma he ships (+4, ns). The
 recommendation that follows is *ship Qwen3.8-27B*, not *retitle the claim*.
 
+## Jeff's review of `backend-split` (2026-09-29)
+
+In `~/Downloads/backend-split-feedback.md` + `…-vllm-label-mask.patch`; gemma-4-26B-A4B on vLLM
+0.30, JevBench v1.4. What we did with each point:
+
+1. Labels outside the top-64 → 500. **Taken** (his patch, `cd3ea3a`), then verified on Qwen3.8 /
+   vLLM 0.29 (`bench/mask_check.py`, `results/mask-*`): masked argmax == unmasked on every
+   comparable prompt, differences within vLLM's own noise. Our additions: pinned penalties
+   (`14454dc`), the unmasked diagnostic path.
+2. Labels matched by string. **Taken** (same patch; ids via `return_tokens_as_token_ids`).
+3. Nondeterminism / `VLLM_BATCH_INVARIANT=1`. **Documented** in `vllm.py`'s docstring.
+4. `input_tokens` differs by backend. **Documented**, not changed.
+5. Guardian / Qwen3Guard / LFM prompts llama.cpp-only. **Refused** on vLLM (`1e313c7`), not ported.
+6. Questions in one request run serially. **Not done** — only multi-question requests benefit.
+
+Still to ask him: whether the `--runoff` numbers in `docs/RESULTS.md` were measured without
+`--batch` (see the aliasing bug above).
+
 ## Also worth knowing
 
 - `~/sysadmin_things/gpu-manager/jev/jev_vllm.py` is the **pre-fork ancestor** of
@@ -159,13 +191,11 @@ confidence alone.
 
 ### Still open
 
-1. **The top-64 truncation, which is a read-mechanism limit rather than a prompt one.** A choice
-   with 19 labels plus a peaked post-thinking distribution puts rare labels outside the server's
-   top-64 of the whole vocabulary, and `_probs` then refuses (correctly — a missing label would
-   otherwise read as zero). Raising the server's `--max-logprobs` (gpum's `MAX_LOGPROBS`, now 64)
-   helps; the real fix is to stop depending on top-k at all and restrict the distribution to the
-   label tokens, e.g. vLLM's `allowed_token_ids` or a `logit_bias` on the labels. That would also
-   make `captured` unnecessary rather than merely satisfied.
+1. ~~The top-64 truncation~~ — **closed 2026-09-29** by the label mask (Jeff found the same
+   failure independently). `cat_dock`, `cat_sdcard`, `cat_mesh` now read, argmax agreeing with
+   the labels the unmasked read could see; `results/mask-qwen38-27b-hard-thinking.json`. It did
+   NOT make `captured` unnecessary — it made it unmeasurable with the mask on; see "Things that
+   will bite".
 2. **The llamacpp half of the bridge has never been run.** `splice_trace` there takes `labels` and
    appends the same `label_constraint`, and it is by construction the same edit, but no GGUF has
    exercised it. It needs the harness venv, which does not currently exist, and a thinking GGUF
