@@ -21,8 +21,11 @@ exactly one token, or if two labels share one.
 - `vllm-backend` — **broken, kept only as history.** Its call-time `import llama_cpp` binds
   locally, so four `Evaluator` methods read an undefined global and every `--batch` request 500s
   with `NameError`. `--batch` is the Docker default. Superseded by `backend-split`.
-- `backend-split` — six commits over upstream, pushed to `fork`. The last three answer Jeff's
-  review (below): his label-mask patch (`cd3ea3a`, his authorship), and two of ours.
+- `backend-split` — eight commits over upstream, **open as Mushroom-Systems/lichen#1**
+  (2026-09-29, at Jeff's request). Includes his label-mask patch (`cd3ea3a`, his authorship),
+  a README "Serving from vLLM" section and `tests/` (stub server; `uv run --group test pytest`).
+  Review changes go on this branch; `thinking` is NOT part of the PR and is not yet rebased onto
+  the last two commits (README, tests).
 - `thinking` — `--thinking N` lets the model reason before the label is read. Rebased onto
   `backend-split` 2026-09-29; validated live, see the `--thinking` section below.
 
