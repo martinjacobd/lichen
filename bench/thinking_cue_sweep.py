@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "bench"))
 from lichen.backends.vllm import Endpoint
 from lichen.method import SYSTEM, GUARD, Method, chat_messages, confidence
 import cases_hard, numpy
+from diag import by_string, unmasked
 
 ap = argparse.ArgumentParser()
 ap.add_argument("endpoint")
@@ -28,7 +29,7 @@ a = ap.parse_args()
 
 m = Method(SYSTEM + GUARD, thinking=a.thinking)
 m_plain = Method(SYSTEM + GUARD, thinking=0)
-ep = Endpoint(a.endpoint, a.model, m, top_logprobs=64, workers=4, served=a.model)
+ep = unmasked(Endpoint(a.endpoint, a.model, m, top_logprobs=64, workers=4, served=a.model))
 
 def mapping(labels, keys):
     return "The labels are: " + ", ".join(f"{l} = {k}" for l, k in zip(labels, keys)) + "."
@@ -94,7 +95,8 @@ for case in CASES:
         trace = ep.reason(case, m)
     except Exception as exc:
         print(f"  {case['id']:<22} reason FAILED: {exc}", flush=True); continue
-    top_p, _ = ep._chat_top(msgs)
+    ep.check_labels(labels)
+    top_p = by_string(ep, ep._chat_top(msgs, [ep._tokens[l] for l in labels])[0])
     pp, cap_p, miss_p = read(top_p, labels)
     row = dict(id=case["id"], type=case["question"]["type"], labels=labels, keys=keys,
                trace_words=len(trace.split()), captured_plain=round(cap_p, 4),

@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "bench"))
 from lichen.backends.vllm import Endpoint
 from lichen.method import SYSTEM, GUARD, Method, chat_messages, confidence
 import cases_hard, numpy
+from diag import by_string, unmasked
 
 ap = argparse.ArgumentParser()
 ap.add_argument("endpoint")
@@ -36,7 +37,7 @@ a = ap.parse_args()
 
 m_plain = Method(SYSTEM + GUARD, thinking=0)
 m_think = Method(SYSTEM + GUARD, thinking=a.thinking)
-ep = Endpoint(a.endpoint, a.model, m_think, top_logprobs=64, workers=4, served=a.model)
+ep = unmasked(Endpoint(a.endpoint, a.model, m_think, top_logprobs=64, workers=4, served=a.model))
 
 def gold_key(case):
     """The case's gold answer as the KEY the read reports, so the two are comparable."""
@@ -83,8 +84,10 @@ for case in CASES:
         trace = ep.reason(case, m_think)
     except Exception as exc:
         print(f"  {case['id']:<22} reason FAILED: {exc}", flush=True); continue
-    top_p, _ = ep._chat_top(msgs)
-    top_t, _ = ep._spliced_top(msgs, ep._fragment(trace.strip()), labels)
+    ep.check_labels(labels)
+    ids = [ep._tokens[l] for l in labels]
+    top_p = by_string(ep, ep._chat_top(msgs, ids)[0])
+    top_t = by_string(ep, ep._spliced_top(msgs, ep._fragment(trace.strip()), labels, ids)[0])
     miss = [l for l in labels if l not in top_p or l not in top_t]
     if miss:
         print(f"  {case['id']:<22} labels missing from top-64: {miss}", flush=True); continue

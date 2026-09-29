@@ -265,6 +265,9 @@ class Endpoint:
         d = self._post("/v1/completions", {
             "model": self.served, "prompt": ids, "max_tokens": method.thinking,
             "temperature": 0.0, "stop": [THINK_CLOSE],
+            # Pinned for the reason `_read` pins them: a greedy trace is otherwise whatever the
+            # server's sampling defaults make it (Qwen's no-thinking set carries presence 1.5).
+            "repetition_penalty": 1.0, "presence_penalty": 0.0, "frequency_penalty": 0.0,
         })
         choice = d["choices"][0]
         trace = (choice.get("text") or "").strip()
