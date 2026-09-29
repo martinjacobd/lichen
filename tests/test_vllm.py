@@ -73,19 +73,26 @@ def test_a_label_of_several_tokens_is_refused(stub):
 def test_a_guard_model_is_refused_by_its_checkpoint_path(stub, root):
     stub.root = root   # served under a name that does not say what it is
     with pytest.raises(RuntimeError, match="llama.cpp backend"):
-        endpoint(stub).check_model(MESSAGES)
+        endpoint(stub).check_model(MESSAGES, Method())
 
 
 def test_a_template_left_open_at_think_is_refused(stub):
     stub.rendered_tail = ["assistant", "\n", "<think>"]
     with pytest.raises(RuntimeError, match="reasoning block"):
-        endpoint(stub).check_model(MESSAGES)
+        endpoint(stub).check_model(MESSAGES, Method())
+
+
+def test_a_template_left_open_at_think_is_accepted_under_thinking(stub):
+    # --thinking splices its trace into that block and closes it, so nothing reads reasoning.
+    stub.rendered_tail = ["assistant", "\n", "<think>"]
+    method = Method(thinking=256)
+    endpoint(stub, method).check_model(MESSAGES, method)
 
 
 def test_the_model_is_checked_once(stub):
     ep = endpoint(stub)
-    ep.check_model(MESSAGES)
-    ep.check_model(MESSAGES)
+    ep.check_model(MESSAGES, Method())
+    ep.check_model(MESSAGES, Method())
     assert sum(path == "/v1/models" for path, _ in stub.requests) == 1
 
 
